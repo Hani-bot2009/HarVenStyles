@@ -1,0 +1,316 @@
+<!-- ================================================================
+     PRODUCT.HTML — ADDITIONS ONLY
+     
+     1. In the <head>, add this BEFORE </head>:
+        <script src="../js/cartUtils.js"></script>
+     
+     2. Replace your existing SECTION 4 (Available Sizes) with
+        the version below — adds size selection state.
+     
+     3. Add the "Add to Cart" block below the existing color section.
+     
+     4. Paste the <script> block at the bottom before </body>.
+================================================================ -->
+
+<!-- ── REPLACEMENT: SECTION 4 — AVAILABLE SIZES ── -->
+<!-- Find your existing pd-section for Sizing and replace the
+     pd-size-tags div with this version (adds data-size and active state) -->
+
+<style>
+  /* Add to product page <style> block */
+
+  /* Size tag — selected state */
+  .pd-size-tag.is-selected {
+    border-color: #d4c9b4;
+    color: #d4c9b4;
+    background: rgba(212,201,180,0.06);
+  }
+  .pd-size-tag { cursor: pointer; }
+
+  /* ── Add to Cart block ── */
+  .pd-atc {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .pd-atc__qty {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .pd-atc__qty-btn {
+    width: 36px; height: 44px;
+    background: none;
+    border: none;
+    color: #888077;
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.2s, background 0.2s;
+  }
+  .pd-atc__qty-btn:hover { color: #f5f2ec; background: rgba(255,255,255,0.04); }
+  .pd-atc__qty-val {
+    width: 38px; height: 44px;
+    text-align: center;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #f5f2ec;
+    background: none;
+    border: none;
+    border-left: 1px solid rgba(255,255,255,0.12);
+    border-right: 1px solid rgba(255,255,255,0.12);
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  .pd-atc__qty-val::-webkit-outer-spin-button,
+  .pd-atc__qty-val::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .pd-atc__btn {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    background: #f5f2ec;
+    border: 1px solid #f5f2ec;
+    color: #0a0a0a;
+    padding: 0.85rem 2rem;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s;
+    white-space: nowrap;
+  }
+  .pd-atc__btn:hover  { background: #d4c9b4; border-color: #d4c9b4; }
+  .pd-atc__btn:disabled {
+    background: #222;
+    border-color: #222;
+    color: #555;
+    cursor: not-allowed;
+  }
+
+  .pd-atc__feedback {
+    width: 100%;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: #888077;
+    margin-top: 0.5rem;
+    min-height: 1.4rem;
+    transition: color 0.2s;
+  }
+  .pd-atc__feedback--err  { color: #c85050; font-style: normal; font-family: 'Barlow', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; }
+  .pd-atc__feedback--ok   { color: #888077; }
+</style>
+
+<!-- ── Size tags — replace existing pd-size-tags div ── -->
+<div class="pd-size-tags" id="sizeTags" aria-label="Available sizes">
+  <span class="pd-size-tag" data-size="S"  tabindex="0" role="button" aria-pressed="false">S</span>
+  <span class="pd-size-tag" data-size="M"  tabindex="0" role="button" aria-pressed="false">M</span>
+  <span class="pd-size-tag" data-size="L"  tabindex="0" role="button" aria-pressed="false">L</span>
+  <span class="pd-size-tag" data-size="XL" tabindex="0" role="button" aria-pressed="false">XL</span>
+</div>
+
+<!-- ── ADD THIS BLOCK — paste after SECTION 5 (Colors), inside .product-page__inner ── -->
+<div class="pd-section">
+  <span class="pd-label">Add to Cart</span>
+  <h2 class="pd-heading">Get The Piece.</h2>
+  <p class="pd-body" style="margin-bottom:1.5rem;">
+    Select your size above, choose a quantity, and add to your cart.
+    Reach out on WhatsApp or Instagram to confirm and complete your order.
+  </p>
+
+  <div class="pd-atc" id="atcBlock">
+    <!-- Quantity stepper -->
+    <div class="pd-atc__qty" role="group" aria-label="Quantity">
+      <button class="pd-atc__qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+      <input  class="pd-atc__qty-val" id="qtyVal" type="number" value="1" min="1" max="99" aria-label="Quantity" />
+      <button class="pd-atc__qty-btn" id="qtyPlus"  aria-label="Increase quantity">+</button>
+    </div>
+
+    <!-- Add to cart button -->
+    <button class="pd-atc__btn" id="addToCartBtn">Add to Cart</button>
+  </div>
+
+  <!-- Inline feedback -->
+  <p class="pd-atc__feedback" id="atcFeedback" aria-live="polite"></p>
+</div>
+
+
+<!-- ================================================================
+     SCRIPT — paste before </body> in product.html
+     Requires cartUtils.js to be loaded first.
+================================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Read product data ───────────────────────────────────────── */
+  /* Pull product ID from URL: product.html?id=<mongo_id>          */
+  var API_BASE   = 'http://192.168.31.65:5000/api';
+  var SESSION_KEY = 'hv_session';
+
+  function getSession() {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch(e) { return null; }
+  }
+
+  /* Current product state — populated from URL param + API */
+  var currentProduct = {
+    id:    '',
+    name:  '',
+    image: '',
+    price: 0,
+  };
+
+  /* Load product from backend (if ID in URL) */
+  (async function loadProduct() {
+    var params = new URLSearchParams(window.location.search);
+    var id     = params.get('id');
+    if (!id) return;
+
+    try {
+      var res  = await fetch(API_BASE + '/products/' + id);
+      if (!res.ok) return;
+      var prod = await res.json();
+
+      currentProduct.id    = prod._id  || id;
+      currentProduct.name  = prod.name  || '';
+      currentProduct.image = prod.image || '';
+      currentProduct.price = prod.price || 0;
+
+      /* Update page title elements if present */
+      var nameEl  = document.getElementById('productName');
+      var descEl  = document.getElementById('productDescription');
+      var imgEl   = document.getElementById('productImage');
+      var priceEl = document.getElementById('productPrice');
+
+      if (nameEl  && prod.name)        nameEl.textContent  = prod.name;
+      if (descEl  && prod.description) descEl.textContent  = prod.description;
+      if (imgEl   && prod.image)       imgEl.src           = prod.image;
+      if (priceEl && prod.price)       priceEl.textContent = '₹' + prod.price;
+    } catch(e) {
+      /* Backend offline — static content remains */
+    }
+  }());
+
+  /* ── Size selection ──────────────────────────────────────────── */
+  var selectedSize = '';
+  var sizeTags     = document.querySelectorAll('.pd-size-tag[data-size]');
+
+  sizeTags.forEach(function(tag) {
+    tag.addEventListener('click', function() {
+      sizeTags.forEach(function(t) {
+        t.classList.remove('is-selected');
+        t.setAttribute('aria-pressed', 'false');
+      });
+      tag.classList.add('is-selected');
+      tag.setAttribute('aria-pressed', 'true');
+      selectedSize = tag.getAttribute('data-size');
+      clearFeedback();
+    });
+    /* Keyboard a11y */
+    tag.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tag.click(); }
+    });
+  });
+
+  /* ── Quantity stepper ────────────────────────────────────────── */
+  var qtyInput = document.getElementById('qtyVal');
+  var qtyMinus = document.getElementById('qtyMinus');
+  var qtyPlus  = document.getElementById('qtyPlus');
+
+  function getQty() {
+    var v = parseInt(qtyInput.value, 10);
+    return isNaN(v) || v < 1 ? 1 : v;
+  }
+
+  if (qtyMinus) qtyMinus.addEventListener('click', function() {
+    var q = getQty();
+    if (q > 1) qtyInput.value = q - 1;
+  });
+  if (qtyPlus) qtyPlus.addEventListener('click', function() {
+    qtyInput.value = getQty() + 1;
+  });
+  if (qtyInput) qtyInput.addEventListener('change', function() {
+    if (getQty() < 1) qtyInput.value = 1;
+  });
+
+  /* ── Feedback helpers ────────────────────────────────────────── */
+  var feedbackEl = document.getElementById('atcFeedback');
+  function setFeedback(msg, type) {
+    if (!feedbackEl) return;
+    feedbackEl.textContent  = msg;
+    feedbackEl.className    = 'pd-atc__feedback pd-atc__feedback--' + (type || 'ok');
+  }
+  function clearFeedback() {
+    if (!feedbackEl) return;
+    feedbackEl.textContent = '';
+    feedbackEl.className   = 'pd-atc__feedback';
+  }
+
+  /* ── Add to Cart ─────────────────────────────────────────────── */
+  var addBtn = document.getElementById('addToCartBtn');
+
+  if (addBtn) {
+    addBtn.addEventListener('click', async function() {
+      clearFeedback();
+
+      /* Must have a size selected */
+      if (!selectedSize) {
+        setFeedback('Please select a size first.', 'err');
+        return;
+      }
+
+      /* Determine product id — from URL param or fallback */
+      var params = new URLSearchParams(window.location.search);
+      var pid    = params.get('id') || currentProduct.id;
+
+      /* If no product ID available, we can still do localStorage-only */
+      /* For the localStorage path we need name/price from the page     */
+      var pName  = currentProduct.name  || (document.getElementById('productName')  || {}).textContent  || 'HarVenStyles T-Shirt';
+      var pImage = currentProduct.image || (document.getElementById('productImage') || {}).src           || '';
+      var pPrice = currentProduct.price;
+
+      /* Try to read price from page if not loaded from API */
+      if (!pPrice) {
+        var rawPrice = ((document.getElementById('productPrice') || {}).textContent || '').replace(/[^\d]/g, '');
+        pPrice = parseInt(rawPrice, 10) || 499;
+      }
+
+      /* Disable button during async call */
+      addBtn.disabled   = true;
+      addBtn.textContent = 'Adding…';
+
+      try {
+        var result = await HVCart.addItem({
+          productId: pid,
+          name:      pName,
+          image:     pImage,
+          price:     pPrice,
+          size:      selectedSize,
+          quantity:  getQty(),
+        });
+
+        setFeedback(
+          'Added to cart — ' + selectedSize + ' × ' + getQty() + '. ' +
+          result.items.length + ' item' + (result.items.length === 1 ? '' : 's') + ' in cart.',
+          'ok'
+        );
+
+        /* Optional: reset qty */
+        qtyInput.value = 1;
+
+      } catch(e) {
+        setFeedback('Could not add to cart. Try again.', 'err');
+      } finally {
+        addBtn.disabled    = false;
+        addBtn.textContent = 'Add to Cart';
+      }
+    });
+  }
+
+}());
+</script>

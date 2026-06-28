@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HarVenStyles — Wear Your Confidence</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="../assets/icons/HarVen-logo.jpeg" />
+  <style>
+    /* ============================================================
+       AUTH MODALS + PROFILE UI — scoped, does not touch style.css
+    ============================================================ */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.78);
+     -webkit-backdrop-filter: blur(6x);
+     backdrop-filter: blur(6px);
+
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .modal-overlay.is-open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: #0f0f0f;
+      border: 1px solid rgba(255,255,255,0.08);
+      width: 100%; max-width: 420px;
+      padding: 2.75rem 2.5rem;
+      position: relative;
+      transform: translateY(24px);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .modal-overlay.is-open .modal { transform: translateY(0); }
+
+    .modal__close {
+      position: absolute; top: 1.1rem; right: 1.2rem;
+      width: 32px; height: 32px;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal__close-line {
+      display: block; width: 16px; height: 1.5px;
+      background: #888077; position: absolute;
+      transition: background 0.2s;
+    }
+    .modal__close-line:first-child { transform: rotate(45deg); }
+    .modal__close-line:last-child  { transform: rotate(-45deg); }
+    .modal__close:hover .modal__close-line { background: #f5f2ec; }
+
+    .modal__label {
+      display: block;
+      font-family: 'Barlow', sans-serif; font-size: 0.62rem;
+      font-weight: 400; letter-spacing: 0.35em; text-transform: uppercase;
+      color: #555; margin-bottom: 0.75rem;
+    }
+    .modal__title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem;
+      letter-spacing: 0.04em; line-height: 0.95;
+      color: #f5f2ec; margin-bottom: 2rem;
+    }
+    .modal__field { margin-bottom: 1rem; }
+    .modal__field label {
+      display: block;
+      font-family: 'Barlow', sans-serif; font-size: 0.62rem;
+      font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase;
+      color: #555; margin-bottom: 0.45rem;
+    }
+    .modal__field--pw { position: relative; }
+    .modal__field--pw input { padding-right: 2.75rem; }
+
+    .pw-toggle {
+      position: absolute; right: 0.85rem; bottom: 0;
+      height: 100%; display: flex; align-items: center; justify-content: center;
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: #444; transition: color 0.2s; outline: none;
+    }
+    .pw-toggle:hover { color: #d4c9b4; }
+    .pw-toggle svg { display: block; pointer-events: none; }
+
+    .modal__field input {
+      width: 100%; background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #f5f2ec; font-family: 'Barlow', sans-serif;
+      font-size: 0.88rem; font-weight: 300;
+      padding: 0.75rem 1rem; outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .modal__field input:focus { border-color: rgba(212,201,180,0.5); }
+    .modal__field input::placeholder { color: #333; }
+
+    .modal__field-error {
+      font-family: 'Barlow', sans-serif; font-size: 0.62rem;
+      letter-spacing: 0.08em; color: #c85050;
+      margin-top: 0.35rem; display: none;
+    }
+    .modal__field-error.is-visible { display: block; }
+    .modal__field.has-error input  { border-color: rgba(200,80,80,0.45); }
+
+    .modal__error {
+      font-family: 'Barlow', sans-serif; font-size: 0.68rem;
+      letter-spacing: 0.1em; color: #c85050;
+      margin-bottom: 1rem; display: none;
+    }
+    .modal__error.is-visible { display: block; }
+
+    .modal__success {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1rem; color: #888077;
+      margin-bottom: 1.25rem; display: none; line-height: 1.6;
+    }
+    .modal__success.is-visible { display: block; }
+
+    .modal__submit {
+      width: 100%; font-family: 'Barlow', sans-serif;
+      font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      background: #f5f2ec; border: 1px solid #f5f2ec;
+      color: #0a0a0a; padding: 0.85rem 1rem;
+      cursor: pointer; transition: background 0.25s, border-color 0.25s;
+      margin-top: 0.5rem;
+    }
+    .modal__submit:hover { background: #d4c9b4; border-color: #d4c9b4; }
+
+    .modal__link {
+      font-family: 'Barlow', sans-serif; font-size: 0.62rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: #555; text-decoration: none;
+      background: none; border: none; cursor: pointer; padding: 0;
+      transition: color 0.2s; display: inline-block; margin-top: 0.85rem;
+    }
+    .modal__link:hover { color: #d4c9b4; }
+
+    .modal__footer {
+      margin-top: 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .modal__footer-text {
+      font-family: 'Barlow', sans-serif; font-size: 0.62rem;
+      letter-spacing: 0.12em; color: #444;
+    }
+
+    .modal__step { display: none; }
+    .modal__step.is-active { display: block; }
+
+    /* ── Topbar auth area ──────────────────────────────────────── */
+    .topbar__auth {
+      display: flex; align-items: center; gap: 0.75rem; position: relative;
+    }
+    .topbar__auth-btn {
+      font-family: 'Barlow', sans-serif; font-size: 0.7rem;
+      font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase;
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: #888077; transition: color 0.2s;
+    }
+    .topbar__auth-btn:hover { color: #f5f2ec; }
+    .topbar__auth-btn--signup {
+      color: #f5f2ec;
+      border-bottom: 1px solid rgba(212,201,180,0.5); padding-bottom: 1px;
+    }
+    .topbar__auth-btn--signup:hover { border-color: #d4c9b4; color: #d4c9b4; }
+   .topbar__auth-sep {
+  font-size: 0.6rem;
+  color: #333;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+    /* ── User profile circle + dropdown ───────────────────────── */
+    .user-profile-wrapper { position: relative; }
+    .user-profile {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #1a1a1a; color: #f5f2ec;
+      display: none; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.05em;
+      cursor: pointer; border: 1px solid rgba(255,255,255,0.15);
+      transition: border-color 0.2s; -webkit-user-select: none;
+user-select: none;
+    }
+    .user-profile:hover { border-color: #d4c9b4; }
+
+   .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+
+      width: 180px;
+      background: #0f0f0f;
+
+      border: 1px solid rgba(255,255,255,0.08);
+
+      display: none;
+      flex-direction: column;
+
+      padding: 0.4rem 0;
+      z-index: 300;
+
+      overflow: hidden;
+
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+    .profile-dropdown.is-open { display: flex; }
+
+    .profile-dropdown__item{
+      display:block;
+      width:100%;
+
+      background:none;
+      border:none;
+
+      color:#888077;
+      font-family:'Barlow',sans-serif;
+      font-size:0.68rem;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+
+      padding:0.85rem 1.2rem;
+
+      text-align:left;
+      cursor:pointer;
+
+      transition:background 0.2s,color 0.2s;
+}
+    .profile-dropdown__item:hover { background: rgba(255,255,255,0.04); color: #f5f2ec; }
+    .profile-dropdown__item--danger { color: #c85050; }
+    .profile-dropdown__item--danger:hover { color: #e06060; background: rgba(200,80,80,0.06); }
+
+    @media (max-width: 480px) {
+      .modal { padding: 2rem 1.5rem; }
+      .modal__title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation" aria-hidden="true">
+    <div class="sidebar__header">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles Logo" class="sidebar__logo" />
+      <button class="sidebar__close" id="closeBtn" aria-label="Close menu">
+        <span class="close-line"></span>
+        <span class="close-line"></span>
+      </button>
+    </div>
+    <ul class="sidebar__nav" role="list">
+      <li class="sidebar__item" style="--i:0"><a href="index.html"   class="sidebar__link">Home</a></li>
+      <li class="sidebar__item" style="--i:1"><a href="shop.html"    class="sidebar__link">Shop</a></li>
+      <li class="sidebar__item" style="--i:2"><a href="product.html" class="sidebar__link">Product Details</a></li>
+      <li class="sidebar__item" style="--i:3"><a href="about.html"   class="sidebar__link">About</a></li>
+      <li class="sidebar__item" style="--i:4"><a href="contact.html" class="sidebar__link">Contact</a></li>
+      <li class="sidebar__item" style="--i:5"><a href="cart.html"    class="sidebar__link">Cart</a></li>
+      <li class="sidebar__item" style="--i:6"><a href="history.html" class="sidebar__link">Order History</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:5"><a href="faq.html"      class="sidebar__link">FAQ</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:6"><a href="shipping.html" class="sidebar__link">Shipping &amp; Returns</a></li>
+    </ul>
+    <div class="sidebar__footer">
+      <p class="sidebar__city">Chennai</p>
+      <p class="sidebar__tagline">Wear your confidence.</p>
+    </div>
+  </nav>
+
+  <!-- TOP BAR -->
+  <header class="topbar" id="topbar">
+    <div class="topbar__left">
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+      <a href="index.html" class="topbar__logo-link" aria-label="HarVenStyles home">
+        <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="topbar__logo" />
+      </a>
+    </div>
+
+    <div class="topbar__right">
+      <div class="topbar__auth" id="topbarAuth">
+        <!-- Shown when logged out -->
+        <button class="topbar__auth-btn topbar__auth-btn--login"  id="openLoginBtn"  aria-label="Log in">Login</button>
+        <span   class="topbar__auth-sep" id="authSep" aria-hidden="true">/</span>
+        <button class="topbar__auth-btn topbar__auth-btn--signup" id="openSignupBtn" aria-label="Create account">Sign Up</button>
+
+        <!-- Shown when logged in -->
+        <div class="user-profile-wrapper">
+          <div class="user-profile" id="userProfile"
+               role="button" tabindex="0"
+               aria-label="Account menu" aria-haspopup="true" aria-expanded="false">
+            <span id="userInitial"></span>
+          </div>
+          <div class="profile-dropdown" id="profileDropdown" role="menu">
+  <button type="button" class="profile-dropdown__item" id="ddMyAccount" role="menuitem">My Account</button>
+  <button type="button" class="profile-dropdown__item" id="ddCart" role="menuitem">Cart</button>
+  <button type="button" class="profile-dropdown__item" id="ddHistory" role="menuitem">Order History</button>
+
+  <button
+    class="profile-dropdown__item"
+    id="ddAdmin"
+    role="menuitem"
+    style="display:none;"
+  >
+    Admin Panel
+  </button>
+</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO VIDEO -->
+  <section class="hero" id="home" aria-label="Hero">
+    <div class="hero__video-wrap" aria-hidden="true">
+      <video class="hero__video" src="../assets/videos/animated HP video.mp4"
+             autoplay muted loop playsinline preload="auto"></video>
+      <div class="hero__overlay"></div>
+    </div>
+    <div class="hero__content">
+      <p class="hero__eyebrow" data-reveal>Est. Chennai</p>
+      <h1 class="hero__title"  data-reveal>HarVenStyles</h1>
+      <p class="hero__sub"     data-reveal>Wear your confidence.</p>
+      <p class="hero__city"    data-reveal>Chennai</p>
+      <a href="#shop" class="hero__btn" data-reveal aria-label="Explore the collection">Explore</a>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <span class="hero__scroll-text">Scroll</span>
+      <div class="hero__scroll-bar"></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>HarVenStyles</span><span aria-hidden="true">·</span>
+      <span>Wear Your Confidence</span><span aria-hidden="true">·</span>
+      <span>Chennai</span><span aria-hidden="true">·</span>
+      <span>New Arrivals</span><span aria-hidden="true">·</span>
+      <span>HarVenStyles</span><span aria-hidden="true">·</span>
+      <span>Wear Your Confidence</span><span aria-hidden="true">·</span>
+      <span>Chennai</span><span aria-hidden="true">·</span>
+      <span>New Arrivals</span><span aria-hidden="true">·</span>
+      <span>HarVenStyles</span><span aria-hidden="true">·</span>
+      <span>Wear Your Confidence</span><span aria-hidden="true">·</span>
+      <span>Chennai</span><span aria-hidden="true">·</span>
+      <span>New Arrivals</span><span aria-hidden="true">·</span>
+      <span>HarVenStyles</span><span aria-hidden="true">·</span>
+      <span>Wear Your Confidence</span><span aria-hidden="true">·</span>
+      <span>Chennai</span><span aria-hidden="true">·</span>
+      <span>New Arrivals</span><span aria-hidden="true">·</span>
+    </div>
+  </div>
+
+  <!-- HERO IMAGE -->
+  <section class="hero-image-section" aria-label="Hero Image">
+    <img src="../assets/images/products/harini/final hp.png"
+         alt="HarVenStyles — Wear Your Confidence" class="hero-image" />
+  </section>
+
+  <!-- THE DROP -->
+  <section class="section section--shop" id="shop" aria-label="Shop">
+    <div class="section__inner">
+      <span class="section__label" data-scroll-reveal>Collection</span>
+      <h2  class="section__title" data-scroll-reveal>The Drop.</h2>
+      <p   class="section__body"  data-scroll-reveal>
+        Essentials built for the streets of Chennai.<br />
+        Limited runs. Uncompromising quality.
+      </p>
+      <a href="shop.html" class="btn-outline" data-scroll-reveal>View All</a>
+    </div>
+    <div class="product-grid" id="homeProductGrid" data-scroll-reveal>
+      <!-- Static fallback — replaced by JS if backend is live -->
+      <article class="product-card">
+        <a href="product.html">
+          <div class="product-card__img-wrap">
+            <img src="../assets/images/products/plain-tshirts/plain-tshirts.jpeg" class="product-card__img" alt="Black Oversized" />
+          </div>
+        </a>
+        <div class="product-card__info">
+          <h3 class="product-card__name">Black Oversized</h3>
+          <p class="product-card__price">&#8377;499</p>
+        </div>
+      </article>
+      <article class="product-card">
+        <a href="product.html">
+          <div class="product-card__img-wrap">
+            <img src="../assets/images/products/plain-tshirts/plain tshirts (2).jpeg" class="product-card__img" alt="Brown Acidwash" />
+          </div>
+        </a>
+        <div class="product-card__info">
+          <h3 class="product-card__name">Brown Acidwash</h3>
+          <p class="product-card__price">&#8377;599</p>
+        </div>
+      </article>
+      <article class="product-card">
+        <a href="product.html">
+          <div class="product-card__img-wrap">
+            <img src="../assets/images/products/plain-tshirts/tshirt3.jpeg" class="product-card__img" alt="Cream Print Oversized" />
+          </div>
+        </a>
+        <div class="product-card__info">
+          <h3 class="product-card__name">Cream Print Oversized</h3>
+          <p class="product-card__price">&#8377;499</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="footer__logo" />
+      <p class="footer__tagline">Wear your confidence.</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer navigation">
+      <a href="faq.html"      class="footer__link">FAQ &amp; Terms</a>
+      <a href="shipping.html" class="footer__link">Shipping &amp; Returns</a>
+      <a href="about.html"    class="footer__link">About</a>
+      <a href="contact.html"  class="footer__link">Contact</a>
+      <a href="product.html"  class="footer__link">Product Details</a>
+    </nav>
+    <p class="footer__copy">&copy; <span id="year"></span> HarVenStyles. All rights reserved. Chennai, India.</p>
+  </footer>
+
+  <!-- ============================================================
+       SIGN UP MODAL
+  ============================================================ -->
+  <div class="modal-overlay" id="signupOverlay" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+    <div class="modal">
+      <button class="modal__close" id="closeSignupBtn" aria-label="Close sign up">
+        <span class="modal__close-line"></span><span class="modal__close-line"></span>
+      </button>
+      <span class="modal__label">Join Us</span>
+      <h2 class="modal__title" id="signupTitle">Create Account.</h2>
+      <div class="modal__error"   id="signupError"></div>
+      <div class="modal__success" id="signupSuccess"></div>
+
+      <div class="modal__field" id="signupNameField">
+        <label for="signupName">Full Name</label>
+        <input type="text"  id="signupName"  placeholder="Your name"        autocomplete="name" />
+        <span class="modal__field-error" id="signupNameErr"></span>
+      </div>
+      <div class="modal__field" id="signupEmailField">
+        <label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" placeholder="you@email.com"    autocomplete="email" />
+        <span class="modal__field-error" id="signupEmailErr"></span>
+      </div>
+      <div class="modal__field modal__field--pw" id="signupPasswordField">
+        <label for="signupPassword">Password</label>
+        <input type="password" id="signupPassword" placeholder="Min. 6 characters" autocomplete="new-password" />
+        <button type="button" class="pw-toggle" data-target="signupPassword" aria-label="Toggle password visibility" tabindex="-1">
+          <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-off"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+        <span class="modal__field-error" id="signupPasswordErr"></span>
+      </div>
+      <div class="modal__field modal__field--pw" id="signupConfirmField">
+        <label for="signupConfirm">Confirm Password</label>
+        <input type="password" id="signupConfirm" placeholder="Repeat password" autocomplete="new-password" />
+        <button type="button" class="pw-toggle" data-target="signupConfirm" aria-label="Toggle password visibility" tabindex="-1">
+          <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-off"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+        <span class="modal__field-error" id="signupConfirmErr"></span>
+      </div>
+
+      <button class="modal__submit" id="signupSubmitBtn">Create Account</button>
+      <div class="modal__footer">
+        <span class="modal__footer-text">Already have an account?</span>
+        <button class="modal__link" id="switchToLoginBtn">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       LOGIN MODAL
+  ============================================================ -->
+  <div class="modal-overlay" id="loginOverlay" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal">
+      <button class="modal__close" id="closeLoginBtn" aria-label="Close login">
+        <span class="modal__close-line"></span><span class="modal__close-line"></span>
+      </button>
+      <span class="modal__label">Welcome Back</span>
+      <h2 class="modal__title" id="loginTitle">Log In.</h2>
+      <div class="modal__error"   id="loginError"></div>
+      <div class="modal__success" id="loginSuccess"></div>
+
+      <div class="modal__field" id="loginEmailField">
+        <label for="loginEmail">Email</label>
+        <input type="email"    id="loginEmail"    placeholder="you@email.com"   autocomplete="email" />
+        <span class="modal__field-error" id="loginEmailErr"></span>
+      </div>
+      <div class="modal__field modal__field--pw" id="loginPasswordField">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password" />
+        <button type="button" class="pw-toggle" data-target="loginPassword" aria-label="Toggle password visibility" tabindex="-1">
+          <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-off"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+        <span class="modal__field-error" id="loginPasswordErr"></span>
+      </div>
+
+      <button class="modal__link" id="openForgotBtn" style="margin-top:0.25rem;">Forgot Password?</button>
+      <button class="modal__submit" id="loginSubmitBtn">Login</button>
+      <div class="modal__footer">
+        <span class="modal__footer-text">New here?</span>
+        <button class="modal__link" id="switchToSignupBtn">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       FORGOT PASSWORD MODAL
+  ============================================================ -->
+  <div class="modal-overlay" id="forgotOverlay" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+    <div class="modal">
+      <button class="modal__close" id="closeForgotBtn" aria-label="Close forgot password">
+        <span class="modal__close-line"></span><span class="modal__close-line"></span>
+      </button>
+
+      <!-- Step 1 — enter email -->
+      <div class="modal__step is-active" id="forgotStep1">
+        <span class="modal__label">Account Recovery</span>
+        <h2 class="modal__title" id="forgotTitle">Forgot Password.</h2>
+        <div class="modal__error" id="forgotError1"></div>
+        <div class="modal__field" id="forgotEmailField">
+          <label for="forgotEmail">Email</label>
+          <input type="email" id="forgotEmail" placeholder="you@email.com" autocomplete="email" />
+          <span class="modal__field-error" id="forgotEmailErr"></span>
+        </div>
+        <button class="modal__submit" id="sendOtpBtn">Send OTP</button>
+      </div>
+
+      <!-- Step 2 — enter OTP + new password -->
+      <div class="modal__step" id="forgotStep2">
+        <span class="modal__label">Verification</span>
+        <h2 class="modal__title">Reset Password.</h2>
+        <div class="modal__success is-visible">OTP sent successfully to your email.</div>
+        <div class="modal__error" id="forgotError2"></div>
+        <div class="modal__field">
+          <label for="otpInput">Enter OTP</label>
+          <input type="text" id="otpInput" placeholder="Demo OTP: 123456" maxlength="6" autocomplete="one-time-code" />
+        </div>
+        <div class="modal__field modal__field--pw">
+          <label for="newPassword">New Password</label>
+          <input type="password" id="newPassword" placeholder="Min. 6 characters" autocomplete="new-password" />
+          <button type="button" class="pw-toggle" data-target="newPassword" aria-label="Toggle password visibility" tabindex="-1">
+            <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-off"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <div class="modal__field modal__field--pw">
+          <label for="confirmNewPassword">Confirm New Password</label>
+          <input type="password" id="confirmNewPassword" placeholder="Repeat new password" autocomplete="new-password" />
+          <button type="button" class="pw-toggle" data-target="confirmNewPassword" aria-label="Toggle password visibility" tabindex="-1">
+            <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-off"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <button class="modal__submit" id="resetPasswordBtn">Reset Password</button>
+      </div>
+
+      <!-- Step 3 — success -->
+      <div class="modal__step" id="forgotStep3">
+        <span class="modal__label">Done</span>
+        <h2 class="modal__title">Password Reset.</h2>
+        <div class="modal__success is-visible" style="margin-top:0.5rem;">
+          Your password has been updated.<br />You can now log in with your new password.
+        </div>
+        <button class="modal__submit" id="backToLoginBtn">Back to Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site JS -->
+
+  <script src="js/modal.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- ============================================================
+       AUTH + PROFILE — single IIFE, no duplicates, no Google auth
+  ============================================================ -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ── Constants ───────────────────────────────────────────────── */
+    var USERS_KEY   = 'hv_users';
+    var SESSION_KEY = 'hv_session';
+    var DEMO_OTP    = '123456';
+    var API_BASE    = 'http://192.168.31.65:5000/api';
+
+    /* ── DOM refs ────────────────────────────────────────────────── */
+    var openLoginBtn  = document.getElementById('openLoginBtn');
+    var openSignupBtn = document.getElementById('openSignupBtn');
+    var authSep       = document.getElementById('authSep');
+    var userProfile   = document.getElementById('userProfile');
+    var userInitial   = document.getElementById('userInitial');
+    var profileDropdown = document.getElementById('profileDropdown');
+
+    var signupOverlay = document.getElementById('signupOverlay');
+    var loginOverlay  = document.getElementById('loginOverlay');
+    var forgotOverlay = document.getElementById('forgotOverlay');
+
+    /* signup fields */
+    var closeSignupBtn   = document.getElementById('closeSignupBtn');
+    var signupName       = document.getElementById('signupName');
+    var signupEmail      = document.getElementById('signupEmail');
+    var signupPassword   = document.getElementById('signupPassword');
+    var signupConfirm    = document.getElementById('signupConfirm');
+    var signupSubmitBtn  = document.getElementById('signupSubmitBtn');
+    var signupError      = document.getElementById('signupError');
+    var signupSuccess    = document.getElementById('signupSuccess');
+    var switchToLoginBtn = document.getElementById('switchToLoginBtn');
+
+    /* login fields */
+    var closeLoginBtn     = document.getElementById('closeLoginBtn');
+    var loginEmail        = document.getElementById('loginEmail');
+    var loginPassword     = document.getElementById('loginPassword');
+    var loginSubmitBtn    = document.getElementById('loginSubmitBtn');
+    var loginError        = document.getElementById('loginError');
+    var loginSuccess      = document.getElementById('loginSuccess');
+    var openForgotBtn     = document.getElementById('openForgotBtn');
+    var switchToSignupBtn = document.getElementById('switchToSignupBtn');
+
+    /* forgot password fields */
+    var closeForgotBtn      = document.getElementById('closeForgotBtn');
+    var forgotStep1         = document.getElementById('forgotStep1');
+    var forgotStep2         = document.getElementById('forgotStep2');
+    var forgotStep3         = document.getElementById('forgotStep3');
+    var forgotEmail         = document.getElementById('forgotEmail');
+    var sendOtpBtn          = document.getElementById('sendOtpBtn');
+    var forgotError1        = document.getElementById('forgotError1');
+    var otpInput            = document.getElementById('otpInput');
+    var newPassword         = document.getElementById('newPassword');
+    var confirmNewPassword  = document.getElementById('confirmNewPassword');
+    var resetPasswordBtn    = document.getElementById('resetPasswordBtn');
+    var forgotError2        = document.getElementById('forgotError2');
+    var backToLoginBtn      = document.getElementById('backToLoginBtn');
+
+    /* dropdown items */
+    var ddCart      = document.getElementById('ddCart');
+var ddHistory   = document.getElementById('ddHistory');
+var ddMyAccount = document.getElementById('ddMyAccount');
+var ddAdmin     = document.getElementById('ddAdmin');
+    
+    
+ /* ── Password visibility toggle ─────────────────────────────── */
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.pw-toggle');
+      if (!btn) { return; }
+      e.preventDefault();
+      var input = document.getElementById(btn.getAttribute('data-target'));
+      if (!input) { return; }
+      var show     = input.type === 'password';
+      input.type   = show ? 'text' : 'password';
+      btn.querySelector('.eye-open').style.display = show ? 'none' : '';
+      btn.querySelector('.eye-off' ).style.display = show ? ''     : 'none';
+      btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    });
+
+    /* ── Storage helpers ─────────────────────────────────────────── */
+    function getSession() {
+      try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch (e) { return null; }
+    }
+    function setSession(data) {
+      try { localStorage.setItem(SESSION_KEY, JSON.stringify(data)); } catch (e) {}
+    }
+    function clearSession() {
+      try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
+    }
+    function getUsers() {
+      try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; } catch (e) { return []; }
+    }
+    function saveUsers(list) {
+      try { localStorage.setItem(USERS_KEY, JSON.stringify(list)); } catch (e) {}
+    }
+    function authHeaders() {
+      var s = getSession();
+      var h = { 'Content-Type': 'application/json' };
+      if (s && s.token) { h['Authorization'] = 'Bearer ' + s.token; }
+      return h;
+    }
+
+    /* ── Email validation ────────────────────────────────────────── */
+    var EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+    function isEmail(s) {
+      var v = (s || '').trim();
+      return v.length > 0 && EMAIL_RE.test(v) && !/\.{2,}/.test(v.split('@')[0]);
+    }
+
+    /* ── Feedback helpers ────────────────────────────────────────── */
+    function showErr(el, msg) { if (!el) { return; } el.textContent = msg; el.classList.add('is-visible'); }
+    function hideErr(el)      { if (!el) { return; } el.textContent = '';  el.classList.remove('is-visible'); }
+    function showOk(el, msg)  { if (!el) { return; } el.textContent = msg; el.classList.add('is-visible'); }
+    function hideOk(el)       { if (!el) { return; } el.textContent = '';  el.classList.remove('is-visible'); }
+
+    function fieldErr(fieldEl, errEl, msg) {
+      if (fieldEl) { fieldEl.classList.add('has-error'); }
+      showErr(errEl, msg);
+    }
+    function clearAllFieldErrors() {
+      document.querySelectorAll('.modal__field.has-error').forEach(function (f) { f.classList.remove('has-error'); });
+      document.querySelectorAll('.modal__field-error.is-visible').forEach(function (e) { e.textContent = ''; e.classList.remove('is-visible'); });
+    }
+
+    /* ── Auth UI ─────────────────────────────────────────────────── */
+    function updateAuthUI() {
+      var session = getSession();
+      if (session && session.name) {
+        openLoginBtn.style.display  = 'none';
+        openSignupBtn.style.display = 'none';
+        authSep.style.display       = 'none';
+        userInitial.textContent     = session.name.charAt(0).toUpperCase();
+        userProfile.style.display   = 'flex';
+        if (ddAdmin) {
+  ddAdmin.style.display = session.isAdmin ? 'block' : 'none';
+}
+      } else {
+        openLoginBtn.style.display  = 'inline-block';
+        openSignupBtn.style.display = 'inline-block';
+        authSep.style.display       = 'inline';
+        userProfile.style.display   = 'none';
+        if (ddAdmin) {
+  ddAdmin.style.display = 'none';
+}
+        profileDropdown.classList.remove('is-open');
+        userProfile.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    /* ── Modal helpers ───────────────────────────────────────────── */
+    function openModal(overlay) {
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      var first = overlay.querySelector('input');
+      if (first) { setTimeout(function () { first.focus(); }, 380); }
+    }
+    function closeModal(overlay) {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    function closeAll() {
+      [signupOverlay, loginOverlay, forgotOverlay].forEach(closeModal);
+    }
+
+    /* Close on backdrop click or Escape */
+    [signupOverlay, loginOverlay, forgotOverlay].forEach(function (ov) {
+      ov.addEventListener('click', function (e) { if (e.target === ov) { closeModal(ov); } });
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeAll(); } });
+
+    /* ── Profile dropdown ────────────────────────────────────────── */
+    userProfile.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = profileDropdown.classList.toggle('is-open');
+      userProfile.setAttribute('aria-expanded', String(open));
+    });
+    userProfile.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); userProfile.click(); }
+    });
+    document.addEventListener('click', function (e) {
+      if (!userProfile.contains(e.target) && !profileDropdown.contains(e.target)) {
+        profileDropdown.classList.remove('is-open');
+        userProfile.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    if (ddMyAccount) { ddMyAccount.addEventListener('click', function () { window.location.href = 'account.html'; }); }
+    if (ddCart)      { ddCart.addEventListener('click',      function () { window.location.href = 'cart.html'; }); }
+    if (ddHistory)   { ddHistory.addEventListener('click',   function () { window.location.href = 'history.html'; }); }
+    if (ddAdmin) {
+  ddAdmin.addEventListener('click', function () {
+    window.location.href = 'admin.html';
+  });
+}
+
+    /* ── Open modals ─────────────────────────────────────────────── */
+    openLoginBtn.addEventListener('click', function () {
+      hideErr(loginError); hideOk(loginSuccess); clearAllFieldErrors();
+      openModal(loginOverlay);
+    });
+    openSignupBtn.addEventListener('click', function () {
+      hideErr(signupError); hideOk(signupSuccess); clearAllFieldErrors();
+      openModal(signupOverlay);
+    });
+
+    /* ── Sign Up ─────────────────────────────────────────────────── */
+    closeSignupBtn.addEventListener('click', function () { closeModal(signupOverlay); });
+
+    signupSubmitBtn.addEventListener('click', async function () {
+      hideErr(signupError); hideOk(signupSuccess); clearAllFieldErrors();
+
+      var name     = signupName.value.trim();
+      var email    = signupEmail.value.trim();
+      var password = signupPassword.value;
+      var confirm  = signupConfirm.value;
+      var valid    = true;
+
+      if (!name) {
+        fieldErr(document.getElementById('signupNameField'), document.getElementById('signupNameErr'), 'Full name is required.');
+        valid = false;
+      }
+      if (!isEmail(email)) {
+        fieldErr(document.getElementById('signupEmailField'), document.getElementById('signupEmailErr'), 'Enter a valid email address.');
+        valid = false;
+      }
+      if (password.length < 6) {
+        fieldErr(document.getElementById('signupPasswordField'), document.getElementById('signupPasswordErr'), 'Password must be at least 6 characters.');
+        valid = false;
+      }
+      if (password !== confirm) {
+        fieldErr(document.getElementById('signupConfirmField'), document.getElementById('signupConfirmErr'), 'Passwords do not match.');
+        valid = false;
+      }
+      if (!valid) { return; }
+
+      /* Try backend */
+      try {
+        var res  = await fetch(API_BASE + '/users/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, email: email, password: password }),
+        });
+        var data = await res.json();
+        if (!res.ok) { showErr(signupError, data.message || 'Signup failed.'); return; }
+        setSession({
+  name: data.name,
+  email: data.email,
+  token: data.token || '',
+  isAdmin:
+    email.toLowerCase() === 'admin@harvenstyles.com' &&
+    password === 'HarVenAdmin123'
+});
+      } catch (e) {
+        /* Offline fallback */
+        var users = getUsers();
+        if (users.some(function (u) { return u.email.toLowerCase() === email.toLowerCase(); })) {
+          fieldErr(document.getElementById('signupEmailField'), document.getElementById('signupEmailErr'), 'An account with this email already exists.');
+          return;
+        }
+        users.push({ name: name, email: email.toLowerCase(), password: password });
+        saveUsers(users);
+        setSession({ name: name, email: email.toLowerCase(), token: '' });
+      }
+
+      showOk(signupSuccess, 'Account created! Taking you to login\u2026');
+      signupName.value = signupEmail.value = signupPassword.value = signupConfirm.value = '';
+      updateAuthUI();
+
+      setTimeout(function () {
+        closeModal(signupOverlay);
+        hideOk(signupSuccess);
+        hideErr(loginError);
+        hideOk(loginSuccess);
+        clearAllFieldErrors();
+        openModal(loginOverlay);
+      }, 1500);
+    });
+
+    switchToLoginBtn.addEventListener('click', function () {
+      closeModal(signupOverlay);
+      hideErr(loginError); hideOk(loginSuccess); clearAllFieldErrors();
+      openModal(loginOverlay);
+    });
+
+    /* ── Login ───────────────────────────────────────────────────── */
+    closeLoginBtn.addEventListener('click', function () { closeModal(loginOverlay); });
+
+    loginSubmitBtn.addEventListener('click', async function () {
+      hideErr(loginError); hideOk(loginSuccess); clearAllFieldErrors();
+
+      var email    = loginEmail.value.trim();
+      var password = loginPassword.value;
+      var valid    = true;
+
+      if (!isEmail(email)) {
+        fieldErr(document.getElementById('loginEmailField'), document.getElementById('loginEmailErr'), 'Enter a valid email address.');
+        valid = false;
+      }
+      if (!password) {
+        fieldErr(document.getElementById('loginPasswordField'), document.getElementById('loginPasswordErr'), 'Password is required.');
+        valid = false;
+      }
+      if (!valid) { return; }
+
+      /* Try backend */
+      try {
+        var res  = await fetch(API_BASE + '/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, password: password }),
+        });
+        var data = await res.json();
+if (!res.ok) { showErr(loginError, data.message || 'Login failed.'); return; }
+
+setSession({
+  name: data.name,
+  email: data.email,
+  token: data.token || '',
+  isAdmin:
+    email.toLowerCase() === 'admin@harvenstyles.com' &&
+    password === 'HarVenAdmin123'
+});
+      } catch (e) {
+        /* Offline fallback */
+        var users = getUsers();
+        var user  = users.find(function (u) {
+          return u.email.toLowerCase() === email.toLowerCase() && u.password === password;
+        });
+        if (!user) { showErr(loginError, 'Invalid email or password.'); return; }
+        setSession({
+  name: user.name,
+  email: user.email,
+  token: '',
+  isAdmin:
+    email.toLowerCase() === 'admin@harvenstyles.com' &&
+    password === 'HarVenAdmin123'
+});
+      }
+
+      var session = getSession();
+      showOk(loginSuccess, 'Welcome back, ' + session.name + '.');
+      loginEmail.value = loginPassword.value = '';
+      updateAuthUI();
+
+      setTimeout(function () { closeModal(loginOverlay); hideOk(loginSuccess); }, 1500);
+    });
+
+    switchToSignupBtn.addEventListener('click', function () {
+      closeModal(loginOverlay);
+      hideErr(signupError); hideOk(signupSuccess); clearAllFieldErrors();
+      openModal(signupOverlay);
+    });
+
+    /* ── Forgot Password ─────────────────────────────────────────── */
+    openForgotBtn.addEventListener('click', function () {
+      closeModal(loginOverlay);
+      forgotStep1.classList.add('is-active');
+      forgotStep2.classList.remove('is-active');
+      forgotStep3.classList.remove('is-active');
+      hideErr(forgotError1);
+      clearAllFieldErrors();
+      forgotEmail.value = '';
+      openModal(forgotOverlay);
+    });
+
+    closeForgotBtn.addEventListener('click', function () { closeModal(forgotOverlay); });
+
+    sendOtpBtn.addEventListener('click', function () {
+      hideErr(forgotError1); clearAllFieldErrors();
+      if (!isEmail(forgotEmail.value.trim())) {
+        fieldErr(document.getElementById('forgotEmailField'), document.getElementById('forgotEmailErr'), 'Enter a valid email address.');
+        return;
+      }
+      forgotStep1.classList.remove('is-active');
+      otpInput.value = newPassword.value = confirmNewPassword.value = '';
+      hideErr(forgotError2);
+      forgotStep2.classList.add('is-active');
+    });
+
+    resetPasswordBtn.addEventListener('click', function () {
+      hideErr(forgotError2);
+      var otp  = otpInput.value.trim();
+      var pass = newPassword.value;
+      var conf = confirmNewPassword.value;
+      if (otp !== DEMO_OTP)  { showErr(forgotError2, 'Invalid OTP. Demo OTP is: 123456'); return; }
+      if (pass.length < 6)   { showErr(forgotError2, 'Password must be at least 6 characters.'); return; }
+      if (pass !== conf)     { showErr(forgotError2, 'Passwords do not match.'); return; }
+
+      var email = forgotEmail.value.trim().toLowerCase();
+      var users = getUsers();
+      users.forEach(function (u) { if (u.email === email) { u.password = pass; } });
+      saveUsers(users);
+
+      forgotStep2.classList.remove('is-active');
+      forgotStep3.classList.add('is-active');
+    });
+
+    backToLoginBtn.addEventListener('click', function () {
+      closeModal(forgotOverlay);
+      hideErr(loginError); hideOk(loginSuccess); clearAllFieldErrors();
+      openModal(loginOverlay);
+    });
+
+    /* ── Init ────────────────────────────────────────────────────── */
+    updateAuthUI();
+
+  }());
+  </script>
+
+  <!-- ============================================================
+       Homepage product loader — replaces static grid if backend live
+  ============================================================ -->
+  <script>
+  (function () {
+    'use strict';
+    var API_BASE = 'http://192.168.31.65:5000/api';
+
+    async function loadHomeProducts() {
+      try {
+        var res = await fetch(API_BASE + '/products');
+        if (!res.ok) { return; }
+        var products = await res.json();
+        if (!Array.isArray(products) || products.length === 0) { return; }
+
+        var grid = document.getElementById('homeProductGrid');
+        if (!grid) { return; }
+        grid.innerHTML = '';
+
+        products.slice(0, 3).forEach(function (p) {
+          grid.innerHTML +=
+            '<article class="product-card">' +
+              '<a href="product.html?id=' + (p._id || '') + '">' +
+                '<div class="product-card__img-wrap">' +
+                  '<img src="' + (p.image || '') + '" class="product-card__img" alt="' + (p.name || '') + '" />' +
+                '</div>' +
+              '</a>' +
+              '<div class="product-card__info">' +
+                '<h3 class="product-card__name">' + (p.name || '') + '</h3>' +
+                '<p class="product-card__price">&#8377;' + (p.price || '') + '</p>' +
+              '</div>' +
+            '</article>';
+        });
+      } catch (e) {
+        /* Backend offline — static fallback cards remain visible */
+      }
+    }
+
+    loadHomeProducts();
+  }());
+  </script>
+  
+
+</body>
+</html>

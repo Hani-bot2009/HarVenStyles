@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart — HarVenStyles</title>
+  <link rel="icon" type="image/png" href="../assets/icons/HarVen-logo.jpeg" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Cart page — scoped styles ───────────────────────────────── */
+    .page-banner {
+      padding: 10rem 2rem 5rem; text-align: center;
+      background: #0a0a0a; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .page-banner__label {
+      display: block; font-family: 'Barlow', sans-serif; font-size: 0.7rem;
+      font-weight: 400; letter-spacing: 0.35em; text-transform: uppercase;
+      color: #888077; margin-bottom: 1rem;
+    }
+    .page-banner__title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 10vw, 8rem);
+      line-height: 0.9; letter-spacing: 0.02em; color: #f5f2ec;
+    }
+    .page-banner__sub {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.15rem; color: #888077; margin-top: 1.1rem;
+    }
+    .cart-section { background: #0a0a0a; min-height: 60vh; padding: 5rem 2rem 8rem; }
+    .cart-section__inner { max-width: 860px; margin: 0 auto; }
+    .cart-loading {
+      text-align: center; padding: 4rem 0; font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: #444;
+    }
+    .cart-count-label {
+      display: block; font-family: 'Barlow', sans-serif; font-size: 0.65rem;
+      font-weight: 400; letter-spacing: 0.35em; text-transform: uppercase;
+      color: #555; margin-bottom: 3rem; text-align: right;
+    }
+    .cart-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
+    .cart-item {
+      display: flex; align-items: center; gap: 1.75rem;
+      padding: 1.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .cart-item:first-child { border-top: 1px solid rgba(255,255,255,0.07); }
+    .cart-item__img-wrap { width: 90px; height: 110px; flex-shrink: 0; overflow: hidden; background: #111; }
+    .cart-item__img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .cart-item:hover .cart-item__img { transform: scale(1.04); }
+    .cart-item__img-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg,#1a1a1a 0%,#111 100%); }
+    .cart-item__info { flex: 1; min-width: 0; }
+    .cart-item__name {
+      font-family: 'Barlow', sans-serif; font-size: 0.82rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #f5f2ec;
+      margin-bottom: 0.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cart-item__meta {
+      font-family: 'Barlow', sans-serif; font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #555; margin-bottom: 0.3rem;
+    }
+    .cart-item__price { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 300; color: #888077; }
+    .cart-item__subtotal { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; color: #555; margin-top: 0.15rem; }
+    .cart-item__actions { display: flex; flex-direction: column; gap: 0.5rem; flex-shrink: 0; }
+    .cart-item__btn {
+      font-family: 'Barlow', sans-serif; font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; padding: 0.55rem 1.1rem;
+      border: 1px solid transparent; cursor: pointer; text-align: center;
+      text-decoration: none; display: inline-block; line-height: 1; white-space: nowrap;
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+    .cart-item__btn--remove { background: transparent; border-color: rgba(255,255,255,0.15); color: #888077; }
+    .cart-item__btn--place-single {
+
+  background: #f5f2ec;
+
+  color: #111;
+
+  border: none;
+
+  border-radius: 999px;
+
+  padding: 0.7rem 1rem;
+
+  font-family: 'Barlow', sans-serif;
+
+  font-size: 0.75rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  width: 100%;
+
+}
+
+.cart-item__btn--place-single:hover {
+
+  transform: translateY(-1px);
+
+  opacity: 0.92;
+
+}
+    .cart-item__btn--remove:hover { border-color: rgba(200,80,80,0.6); color: #c85050; }
+    .cart-item__btn--remove:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Cart Summary ────────────────────────────────────────────── */
+    .cart-summary {
+      margin-top: 3rem; display: flex; align-items: flex-start;
+      justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+      padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .cart-summary__total-label {
+      font-family: 'Barlow', sans-serif; font-size: 0.68rem; font-weight: 400;
+      letter-spacing: 0.28em; text-transform: uppercase; color: #555;
+    }
+    .cart-summary__total-value {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+      letter-spacing: 0.06em; color: #f5f2ec; margin-top: 0.2rem;
+    }
+    .cart-summary__actions { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-end; }
+    .cart-summary__btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: flex-end; }
+    .cart-summary__btn {
+      font-family: 'Barlow', sans-serif; font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; padding: 0.75rem 1.75rem;
+      border: 1px solid transparent; cursor: pointer; text-decoration: none;
+      display: inline-block; transition: background 0.25s, border-color 0.25s, color 0.25s;
+      white-space: nowrap;
+    }
+    .cart-summary__btn--clear { background: transparent; border-color: rgba(255,255,255,0.15); color: #888077; }
+    .cart-summary__btn--clear:hover { border-color: rgba(200,80,80,0.5); color: #c85050; }
+    .cart-summary__btn--whatsapp {
+      background: transparent; border-color: rgba(255,255,255,0.18); color: #d4c9b4;
+    }
+    .cart-summary__btn--whatsapp:hover { border-color: #d4c9b4; color: #f5f2ec; }
+
+    /* ── Place Order — hero action ───────────────────────────────── */
+    .cart-summary__btn--place-order {
+      background: #f5f2ec; border-color: #f5f2ec; color: #0a0a0a;
+      font-size: 0.72rem; letter-spacing: 0.28em; padding: 0.9rem 2.25rem;
+    }
+    .cart-summary__btn--place-order:hover { background: #d4c9b4; border-color: #d4c9b4; }
+    .cart-summary__btn--place-order:disabled {
+      background: #222; border-color: #222; color: #555; cursor: not-allowed;
+    }
+
+    /* ── Order placed confirmation banner ────────────────────────── */
+    .order-success {
+      border: 1px solid rgba(212,201,180,0.2);
+      background: rgba(212,201,180,0.04);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin-top: 1.5rem;
+      display: none;
+    }
+    .order-success.is-visible { display: block; }
+    .order-success__title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem;
+      letter-spacing: 0.06em; color: #f5f2ec; margin-bottom: 0.5rem;
+    }
+    .order-success__sub {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.05rem; color: #888077; margin-bottom: 1.5rem; line-height: 1.7;
+    }
+    .order-success__link {
+      display: inline-block; font-family: 'Barlow', sans-serif; font-size: 0.7rem;
+      font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.2); color: #f5f2ec;
+      padding: 0.75rem 2rem; text-decoration: none;
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .order-success__link:hover { background: #f5f2ec; border-color: #f5f2ec; color: #0a0a0a; }
+
+    /* ── Order error banner ──────────────────────────────────────── */
+    .order-error {
+      font-family: 'Barlow', sans-serif; font-size: 0.68rem; letter-spacing: 0.1em;
+      color: #c85050; margin-top: 0.75rem; text-align: right; display: none;
+    }
+    .order-error.is-visible { display: block; }
+
+    /* ── Empty cart ──────────────────────────────────────────────── */
+    .cart-empty { text-align: center; padding: 5rem 2rem 3rem; }
+    .cart-empty__icon { line-height: 1; margin-bottom: 1.5rem; opacity: 0.18; }
+    .cart-empty__title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 6vw, 4rem);
+      letter-spacing: 0.04em; line-height: 0.95; color: #f5f2ec; margin-bottom: 0.85rem;
+    }
+    .cart-empty__sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; color: #555; margin-bottom: 2.5rem; }
+    .cart-empty__btn {
+      display: inline-block; font-family: 'Barlow', sans-serif; font-size: 0.7rem;
+      font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.2); color: #f5f2ec;
+      padding: 0.85rem 2.2rem; text-decoration: none; transition: background 0.25s, border-color 0.25s;
+    }
+    .cart-empty__btn:hover { background: #f5f2ec; border-color: #f5f2ec; color: #0a0a0a; }
+
+    @media (max-width: 600px) {
+      .cart-item { gap: 1rem; }
+      .cart-item__img-wrap { width: 70px; height: 86px; }
+      .cart-item__actions { flex-direction: row; }
+      .cart-summary { flex-direction: column; align-items: flex-start; }
+      .cart-summary__actions { align-items: flex-start; width: 100%; }
+      .cart-summary__btn-row { width: 100%; }
+      .cart-summary__btn--place-order { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation" aria-hidden="true">
+    <div class="sidebar__header">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles Logo" class="sidebar__logo" />
+      <button class="sidebar__close" id="closeBtn" aria-label="Close menu">
+        <span class="close-line"></span><span class="close-line"></span>
+      </button>
+    </div>
+    <ul class="sidebar__nav" role="list">
+      <li class="sidebar__item" style="--i:0"><a href="index.html"   class="sidebar__link">Home</a></li>
+      <li class="sidebar__item" style="--i:1"><a href="shop.html"    class="sidebar__link">Shop</a></li>
+      <li class="sidebar__item" style="--i:2"><a href="product.html" class="sidebar__link">Product Details</a></li>
+      <li class="sidebar__item" style="--i:3"><a href="about.html"   class="sidebar__link">About</a></li>
+      <li class="sidebar__item" style="--i:4"><a href="contact.html" class="sidebar__link">Contact</a></li>
+      <li class="sidebar__item" style="--i:5"><a href="cart.html"    class="sidebar__link">Cart</a></li>
+      <li class="sidebar__item" style="--i:6"><a href="history.html" class="sidebar__link">Order History</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:7"><a href="faq.html"      class="sidebar__link">FAQ</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:8"><a href="shipping.html" class="sidebar__link">Shipping &amp; Returns</a></li>
+    </ul>
+    <div class="sidebar__footer">
+      <p class="sidebar__city">Chennai</p>
+      <p class="sidebar__tagline">Wear your confidence.</p>
+    </div>
+  </nav>
+
+  <header class="topbar is-scrolled" id="topbar">
+    <div class="topbar__left">
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <span class="hamburger__line"></span><span class="hamburger__line"></span><span class="hamburger__line"></span>
+      </button>
+      <a href="index.html" class="topbar__logo-link" aria-label="HarVenStyles home">
+        <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="topbar__logo" />
+      </a>
+    </div>
+  </header>
+
+  <section class="page-banner" aria-label="Cart header">
+    <span class="page-banner__label">Your Selection</span>
+    <h1 class="page-banner__title">Your Cart.</h1>
+    <p class="page-banner__sub">Review your picks, then place your order.</p>
+  </section>
+
+  <section class="cart-section" aria-label="Shopping cart">
+    <div class="cart-section__inner">
+      <div id="cartRoot"><p class="cart-loading">Loading your cart…</p></div>
+
+      <!-- Order success — shown after successful place order -->
+      <div class="order-success" id="orderSuccess" role="alert" aria-live="polite">
+        <p class="order-success__title">Order Placed.</p>
+        <p class="order-success__sub" id="orderSuccessMsg">
+          Your order has been saved. We'll reach out to confirm details shortly.
+        </p>
+        <a href="history.html" class="order-success__link">View Order History</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__top">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="footer__logo" />
+      <p class="footer__tagline">Wear your confidence.</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer navigation">
+      <a href="faq.html"      class="footer__link">FAQ &amp; Terms</a>
+      <a href="shipping.html" class="footer__link">Shipping &amp; Returns</a>
+      <a href="about.html"    class="footer__link">About</a>
+      <a href="contact.html"  class="footer__link">Contact</a>
+      <a href="product.html"  class="footer__link">Product Details</a>
+    </nav>
+    <p class="footer__copy">&copy; <span id="year"></span> HarVenStyles. All rights reserved. Chennai, India.</p>
+  </footer>
+
+  <script src="js/modal.js"></script>
+  <script src="js/main.js"></script>
+  <script src="./js/cartUtils.js"></script>
+
+  <!--
+  ════════════════════════════════════════════════════════════════
+  REPLACEMENT for the entire <script> block at the bottom of
+  cart.html (everything after <script src="./js/cartUtils.js">).
+
+  RULES FOLLOWED:
+  • Pure localStorage only — no backend API calls
+  • Preserves every existing CSS class / HTML structure
+  • Adds quantity ± controls + live subtotal/total updates
+  • Remove, Clear Cart, Place Order all working
+  • No duplicate logic, no syntax errors
+  ════════════════════════════════════════════════════════════════
+-->
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Constants ───────────────────────────────────────────────── */
+  var CART_KEY    = 'hv_cart';
+
+  /* ── DOM refs ────────────────────────────────────────────────── */
+  var root          = document.getElementById('cartRoot');
+  var successBanner = document.getElementById('orderSuccess');
+  var successMsg    = document.getElementById('orderSuccessMsg');
+
+ 
+  /* ── Formatting helpers ──────────────────────────────────────── */
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function toNum(val) {
+    return parseFloat(String(val).replace(/[^\d.]/g, '')) || 0;
+  }
+  function fmtPrice(val) {
+    return '₹' + toNum(val).toLocaleString('en-IN');
+  }
+  function fmtDate(iso) {
+    try {
+      var d = new Date(iso);
+      return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })
+        + ' · ' + d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', hour12:true });
+    } catch(e) { return ''; }
+  }
+
+  /* ── Normalise qty field (cart items may use .qty or .quantity) ─ */
+  function getQty(item) { return parseInt(item.qty || item.quantity || 1, 10) || 1; }
+
+  /* ── Build WhatsApp URL ──────────────────────────────────────── */
+  function buildWAUrl(items) {
+    var lines = items.map(function(i) {
+      return esc(i.name)
+        + (i.size ? ' (Size: ' + i.size + ')' : '')
+        + ' x' + getQty(i)
+        + ' — ' + fmtPrice(i.price);
+    });
+    return 'https://wa.me/917305480559?text='
+      + encodeURIComponent('Hi! I want to order:\n' + lines.join('\n'));
+  }
+
+  /* ── Build a single cart-item row ────────────────────────────── */
+  function buildItem(item, index) {
+    
+    var imgHtml = item.product.image
+      ? '<img src="' + esc(item.product.image) + '" alt="' + esc(item.product.name) + '" class="cart-item__img" loading="lazy" />'
+      : '<div class="cart-item__img-placeholder" aria-hidden="true"></div>';
+
+    var unitPrice = toNum(item.product.price);
+    var qty       = getQty(item);
+    var subtotal  = unitPrice * qty;
+
+    var metaParts = [];
+    if (item.size) metaParts.push('Size: ' + item.size);
+
+    return (
+      '<li class="cart-item" data-id="' + item._id + '" data-index="' + index + '">' +
+        '<div class="cart-item__img-wrap">' + imgHtml + '</div>' +
+        '<div class="cart-item__info">' +
+          '<p class="cart-item__name">'  + esc(item.product.name) + '</p>' +
+          (metaParts.length ? '<p class="cart-item__meta">' + esc(metaParts.join(' · ')) + '</p>' : '') +
+          '<p class="cart-item__price">' + fmtPrice(unitPrice) + ' each</p>' +
+          '<p class="cart-item__subtotal" id="subtotal-' + index + '">Subtotal: ' + fmtPrice(subtotal) + '</p>' +
+        '</div>' +
+
+        /* Quantity controls + Remove */
+        '<div class="cart-item__actions">' +
+
+          /* ── Quantity row ── */
+          '<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.45rem;">' +
+            '<button class="cart-item__btn cart-item__btn--qty" data-qty-dec="' + index + '" aria-label="Decrease quantity" ' + (qty <= 1 ? 'disabled' : '') + '>−</button>' +
+            '<span class="cart-item__qty-display" id="qty-' + index + '" style="font-family:\'Barlow\',sans-serif;font-size:0.78rem;color:#f5f2ec;min-width:1.5rem;text-align:center;">' + qty + '</span>' +
+            '<button class="cart-item__btn cart-item__btn--qty" data-qty-inc="' + index + '" aria-label="Increase quantity">+</button>' +
+          '</div>' +
+
+        '<button class="cart-item__btn cart-item__btn--remove" data-remove="' +
+item._id +
+'" aria-label="Remove ' +
+esc(item.product.name) +
+'">Remove</button>' +
+
+'<button class="cart-item__btn cart-item__btn--place-single" data-order-item="' +
+item._id +
+'" style="margin-top:0.5rem;">Place Order</button>' +
+'</div>' +
+'</li>'
+    );
+  }
+
+
+  /* ── Render full cart ────────────────────────────────────────── */
+  async function render() {
+
+    const cartData = await HVCart.fetchCart();
+
+    var items = cartData.items || [];
+    
+    console.log("CART DATA:", cartData);
+    console.log("ITEMS:", items);
+    console.log("TOTAL FROM API:", cartData.total);
+
+    var html = '';
+
+    if (items.length === 0) {
+      html =
+        '<div class="cart-empty">' +
+          '<div class="cart-empty__icon" aria-hidden="true">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>' +
+              '<line x1="3" y1="6" x2="21" y2="6"/>' +
+              '<path d="M16 10a4 4 0 0 1-8 0"/>' +
+            '</svg>' +
+          '</div>' +
+          '<h2 class="cart-empty__title">Your Cart Is Empty.</h2>' +
+          '<p class="cart-empty__sub">No items added yet.</p>' +
+          '<a href="shop.html" class="cart-empty__btn">Continue Shopping</a>' +
+        '</div>';
+
+      root.innerHTML = html;
+      return;
+    }
+
+    /* ── Items ── */
+    var itemWord = items.length === 1 ? 'item' : 'items';
+    var total    = items.reduce(function(s, i) { return s + toNum(i.price) * getQty(i); }, 0);
+
+    html += '<span class="cart-count-label">' + items.length + ' ' + itemWord + ' in your cart</span>';
+    html += '<ul class="cart-list" aria-label="Cart items">';
+    items.forEach(function(item, index) { html += buildItem(item, index); });
+    html += '</ul>';
+
+    /* ── Summary ── */
+    html +=
+      '<div class="cart-summary">' +
+        '<div>' +
+          '<p class="cart-summary__total-label">Estimated Total</p>' +
+         '<p class="cart-summary__total-value" id="cartTotalValue">' + fmtPrice(cartData.total || 0) + '</p>' +
+        '</div>' +
+        '<div class="cart-summary__actions">' +
+          '<div class="cart-summary__btn-row">' +
+            '<button class="cart-summary__btn cart-summary__btn--clear" id="clearCartBtn">Clear Cart</button>' +
+            '<a href="' + buildWAUrl(items) + '" target="_blank" rel="noopener noreferrer" ' +
+              'class="cart-summary__btn cart-summary__btn--whatsapp" id="waLink">WhatsApp</a>' +
+          '</div>' +
+          '<button class="cart-summary__btn cart-summary__btn--place-order" id="placeOrderBtn">Place Order</button>' +
+          '<p class="order-error" id="orderError"></p>' +
+        '</div>' +
+      '</div>';
+
+    root.innerHTML = html;
+
+
+
+bindEvents();
+  }
+
+  /* ── Bind ALL events after every render ──────────────────────── */
+  function bindEvents() {
+
+    /* ── Remove ── */
+    root.querySelectorAll('[data-remove]').forEach(function(btn) {
+  btn.addEventListener('click', async function() {
+
+    var itemId = btn.getAttribute('data-remove');
+
+    console.log("REMOVING:", itemId);
+
+    await HVCart.removeItem(itemId);
+
+    render();
+
+  });
+});
+
+/* ── Single Item Place Order ── */
+root.querySelectorAll('[data-order-item]').forEach(function(btn) {
+
+  btn.addEventListener('click', async function() {
+
+    var itemId = btn.getAttribute('data-order-item');
+
+    console.log("PLACE ORDER FOR:", itemId);
+
+var session = JSON.parse(
+  localStorage.getItem('hv_session') || '{}'
+);
+
+await fetch(
+  'http://192.168.31.65:5000/api/cart/place-order/' +
+  itemId,
+  {
+    method: 'POST',
+    headers: {
+      Authorization:
+        'Bearer ' + session.token
+    }
+  }
+);
+
+await render();
+
+await showAlert(
+  "Thank you for your order!\n\n" +
+  "To confirm it, please contact us through WhatsApp, Instagram, or Email and complete the payment process.\n\n" +
+  "You may also share any customization requests or bulk-order details during the conversation.\n\n" +
+  "Your order will be confirmed only after payment verification."
+);
+
+  });
+
+});
+
+    /* ── Quantity decrease ── */
+    root.querySelectorAll('[data-qty-dec]').forEach(function(btn) {
+      btn.addEventListener('click', async function() {
+       var index = parseInt(btn.getAttribute('data-qty-dec'), 10);
+
+var itemId = btn.closest('.cart-item').getAttribute('data-id');
+
+var qtyEl = document.getElementById('qty-' + index);
+
+var current = parseInt(qtyEl.textContent);
+
+if (current <= 1) return;
+
+await HVCart.updateQuantity(
+  itemId,
+  current - 1
+);
+
+render();
+
+updateWALink();
+      });
+    });
+
+  /* ── Quantity increase ── */
+root.querySelectorAll('[data-qty-inc]').forEach(function(btn) {
+
+  btn.addEventListener('click', async function() {
+
+    var index = parseInt(btn.getAttribute('data-qty-inc'), 10);
+
+    var itemId = btn.closest('.cart-item').getAttribute('data-id');
+
+    var qtyEl = document.getElementById('qty-' + index);
+
+    var current = parseInt(qtyEl.textContent);
+
+    await HVCart.updateQuantity(
+      itemId,
+      current + 1
+    );
+
+    render();
+
+    updateWALink();
+
+  });
+
+});
+    /* ── Clear cart ── */
+var clearBtn = document.getElementById('clearCartBtn');
+
+if (clearBtn) {
+
+  clearBtn.addEventListener('click', async function() {
+
+    var ok = await showConfirm("Clear all items from your cart?");
+
+    if(!ok) return;
+
+    await HVCart.clearCart();
+
+    render();
+
+  });
+
+}
+
+    /* ── Place Order ── */
+    var placeBtn = document.getElementById('placeOrderBtn');
+    var errorEl  = document.getElementById('orderError');
+
+    if (placeBtn) {
+      placeBtn.addEventListener('click', async function() {
+        if (errorEl) { errorEl.textContent = ''; errorEl.classList.remove('is-visible'); }
+        
+
+   placeBtn.disabled = true;
+placeBtn.textContent = 'Placing Order…';
+
+try {
+
+  var cartData = await HVCart.fetchCart();
+
+  console.log("MONGODB CART:", cartData);
+
+  if (!cartData.items || cartData.items.length === 0) {
+
+    if (errorEl) {
+      errorEl.textContent = 'Your cart is empty.';
+      errorEl.classList.add('is-visible');
+    }
+
+    return;
+  }
+
+  console.log("ORDER WILL BE PLACED");
+
+  var order = await HVCart.placeOrder();
+
+  console.log("ORDER CREATED:", order);
+
+  await render();
+
+  await showAlert("Order placed successfully!");
+
+} catch(err) {
+
+  console.error(err);
+
+  if (errorEl) {
+    errorEl.textContent = err.message;
+    errorEl.classList.add('is-visible');
+  }
+
+} finally {
+
+  placeBtn.disabled = false;
+  placeBtn.textContent = 'Place Order';
+
+}
+
+        /* Show success banner */
+       successMsg.textContent =
+  'Order placed successfully. We\'ll reach out on WhatsApp or Instagram to confirm.';
+
+        successBanner.classList.add('is-visible');
+
+        /* Render empty cart */
+        render();
+        setTimeout(function() {
+  window.location.href = 'history.html';
+}, 1500);
+
+        /* Scroll to success banner */
+        successBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    
+    }
+  }
+
+  /* ── Update WhatsApp link href after qty changes ─────────────── */
+ async function updateWALink() {
+
+  var waLink = document.getElementById('waLink');
+
+  if (!waLink) return;
+
+  var cartData = await HVCart.fetchCart();
+
+  waLink.href = buildWAUrl(cartData.items);
+
+}
+
+  /* ── Extra styles for qty buttons (injected once) ────────────── */
+  (function injectQtyStyles() {
+    if (document.getElementById('hv-qty-styles')) return;
+    var style = document.createElement('style');
+    style.id = 'hv-qty-styles';
+    style.textContent = [
+      '.cart-item__btn--qty {',
+      '  background: transparent;',
+      '  border-color: rgba(255,255,255,0.15);',
+      '  color: #888077;',
+      '  padding: 0.35rem 0.65rem;',
+      '  font-size: 0.85rem;',
+      '  line-height: 1;',
+      '}',
+      '.cart-item__btn--qty:hover:not(:disabled) {',
+      '  border-color: #f5f2ec;',
+      '  color: #f5f2ec;',
+      '}',
+      '.cart-item__btn--qty:disabled {',
+      '  opacity: 0.25;',
+      '  cursor: not-allowed;',
+      '}',
+    ].join('\n');
+    document.head.appendChild(style);
+  }());
+
+  /* ── Init ────────────────────────────────────────────────────── */
+  render();
+
+}());
+</script>
+<div id="toast"></div>
+
+</body>
+</html>

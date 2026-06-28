@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details — HarVenStyles</title>
+  <link rel="icon" type="image/png" href="../assets/icons/HarVen-logo.jpeg" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="../assets/icons/HarVen-logo.jpeg" />
+  <style>
+    /* ── Product page — scoped additions only ────────────────────── */
+
+    /* Page banner */
+    .page-banner {
+      padding: 10rem 2rem 5rem;
+      text-align: center;
+      background: #0a0a0a;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .page-banner__label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #888077;
+      margin-bottom: 1rem;
+    }
+    .page-banner__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: #f5f2ec;
+    }
+    .page-banner__sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: #888077;
+      margin-top: 1.1rem;
+    }
+
+    /* ── Product content wrapper ─────────────────────────────────── */
+    .product-page {
+      background: #0a0a0a;
+      padding: 6rem 2rem 8rem;
+    }
+    .product-page__inner {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5rem;
+    }
+
+    /* ── Section divider ─────────────────────────────────────────── */
+    .pd-section {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 3rem;
+    }
+    .pd-section:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    /* Section label */
+    .pd-label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 1.1rem;
+    }
+
+    /* Section heading */
+    .pd-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: #f5f2ec;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Body text */
+    .pd-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: #888077;
+    }
+
+    /* ── Spec list ───────────────────────────────────────────────── */
+    .pd-spec-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .pd-spec-list__item {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .pd-spec-list__item:first-child {
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .pd-spec-list__key {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #f5f2ec;
+      min-width: 140px;
+      flex-shrink: 0;
+    }
+    .pd-spec-list__val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: #888077;
+      line-height: 1.6;
+    }
+
+    /* ── Printing style sub-list ─────────────────────────────────── */
+    .pd-print-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.35rem 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .pd-print-list li {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: #888077;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .pd-print-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: #d4c9b4;
+    }
+
+    /* ── Material image ──────────────────────────────────────────── */
+    .pd-material-img {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      margin-top: 2rem;
+      filter: grayscale(20%);
+      transition: filter 0.5s;
+    }
+    .pd-material-img:hover { filter: grayscale(0%); }
+
+    /* Fabric quality placeholder (used if image not present) */
+    .pd-material-placeholder {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #1a1a1a 0%, #141414 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .pd-material-placeholder span {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #333;
+    }
+
+    /* ── Size tags ───────────────────────────────────────────────── */
+    .pd-size-img-wrap {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16/5;
+      background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0 1.5rem;
+    }
+    .pd-size-img-wrap span {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #333;
+    }
+    .pd-size-tags {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .pd-size-tag {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.12em;
+      color: #f5f2ec;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.4rem 1.1rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .pd-size-tag:hover { border-color: #d4c9b4; color: #d4c9b4; }
+
+    /* ── Color swatches ──────────────────────────────────────────── */
+    .pd-color-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .pd-color-list__item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .pd-color-list__item:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+    .pd-color-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      flex-shrink: 0;
+    }
+    .pd-color-name {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888077;
+    }
+
+    /* Swatch colours */
+    .swatch--black      { background: #0a0a0a; border-color: rgba(255,255,255,0.25); }
+    .swatch--offwhite   { background: #f5f0e8; }
+    .swatch--acidblack  { background: #2a2a2a; background-image: radial-gradient(circle at 30% 30%, #3d3d3d 0%, #111 60%); }
+    .swatch--acidbrown  { background: #6b4f3a; background-image: radial-gradient(circle at 30% 30%, #8c6347 0%, #3e2a1a 60%); }
+
+    /* ── Pricing block ───────────────────────────────────────────── */
+    .pd-pricing-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: #888077;
+      margin-bottom: 1.5rem;
+    }
+    .pd-pricing-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .pd-pricing-link {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #d4c9b4;
+      border-bottom: 1px solid rgba(212,201,180,0.4);
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+      text-decoration: none;
+    }
+    .pd-pricing-link:hover { opacity: 0.55; }
+
+    /* ── Bulk orders ─────────────────────────────────────────────── */
+    .pd-bulk {
+      background: #0f0f0f;
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 2.5rem;
+    }
+    .pd-bulk__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.06em;
+      color: #f5f2ec;
+      margin-bottom: 0.75rem;
+    }
+    .pd-bulk__body {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: #888077;
+      margin-bottom: 1.5rem;
+    }
+    .pd-bulk__link {
+      display: inline-block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #d4c9b4;
+      border-bottom: 1px solid rgba(212,201,180,0.4);
+      padding-bottom: 2px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .pd-bulk__link:hover { opacity: 0.55; }
+
+    @media (max-width: 600px) {
+      .pd-spec-list__key { min-width: 110px; }
+      .pd-bulk { padding: 2rem 1.25rem; }
+      .pd-pricing-links { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation" aria-hidden="true">
+    <div class="sidebar__header">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles Logo" class="sidebar__logo" />
+      <button class="sidebar__close" id="closeBtn" aria-label="Close menu">
+        <span class="close-line"></span>
+        <span class="close-line"></span>
+      </button>
+    </div>
+    <ul class="sidebar__nav" role="list">
+      <li class="sidebar__item" style="--i:0"><a href="index.html"           class="sidebar__link">Home</a></li>
+      <li class="sidebar__item" style="--i:1"><a href="shop.html"            class="sidebar__link">Shop</a></li>
+      <li class="sidebar__item" style="--i:2"><a href="product.html"         class="sidebar__link">Product Details</a></li>
+      <li class="sidebar__item" style="--i:3"><a href="about.html"           class="sidebar__link">About</a></li>
+      <li class="sidebar__item" style="--i:4"><a href="contact.html"         class="sidebar__link">Contact</a></li>
+       <!-- Cart & Order History — PART 2 -->
+      <li class="sidebar__item" style="--i:5"><a href="cart.html"    class="sidebar__link">Cart</a></li>
+      <li class="sidebar__item" style="--i:6"><a href="history.html" class="sidebar__link">Order History</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:5"><a href="faq.html"      class="sidebar__link">FAQ</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:6"><a href="shipping.html" class="sidebar__link">Shipping &amp; Returns</a></li>
+      
+    </ul>
+    <div class="sidebar__footer">
+      <p class="sidebar__city">Chennai</p>
+      <p class="sidebar__tagline">Wear your confidence.</p>
+    </div>
+  </nav>
+
+  <!-- TOP BAR -->
+  <header class="topbar is-scrolled" id="topbar">
+    <div class="topbar__left">
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+      <a href="index.html" class="topbar__logo-link" aria-label="HarVenStyles home">
+        <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="topbar__logo" />
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       PAGE BANNER
+  ============================================================ -->
+  <section class="page-banner" aria-label="Product details header">
+    <span class="page-banner__label">Product Details</span>
+    <h1 class="page-banner__title">Oversized Round<br />Neck T-Shirt.</h1>
+    <p class="page-banner__sub">Minimal, confident streetwear designed for everyday wear.</p>
+  </section>
+
+  <!-- ============================================================
+       PRODUCT CONTENT
+  ============================================================ -->
+  <main class="product-page" aria-label="Product information">
+    <div class="product-page__inner">
+
+      <!-- ── SECTION 1 — PRODUCT OVERVIEW ── -->
+      <div class="pd-section">
+        <span class="pd-label">Overview</span>
+        <h2 class="pd-heading" id="productName">The Piece.</h2>
+        <p class="pd-body" id="productDescription"></p>
+          The HarVenStyles Oversized Round Neck T-Shirt is built for the everyday — clean lines,
+          breathable fabric, and a relaxed silhouette that carries confidence without trying.
+          Designed in Chennai, made to last.
+        </p>
+      </div>
+
+      <!-- ── SECTION 2 — PRODUCT SPECIFICATIONS ── -->
+      <div class="pd-section">
+        <span class="pd-label">Specifications</span>
+        <h2 class="pd-heading">The Details.</h2>
+        <ul class="pd-spec-list" aria-label="Product specifications">
+          <li class="pd-spec-list__item">
+            <span class="pd-spec-list__key">Fabric</span>
+            <span class="pd-spec-list__val">100% Cotton</span>
+          </li>
+          <li class="pd-spec-list__item">
+            <span class="pd-spec-list__key">GSM</span>
+            <span class="pd-spec-list__val">240 GSM (Oversized)</span>
+          </li>
+          <li class="pd-spec-list__item">
+            <span class="pd-spec-list__key">Fit</span>
+            <span class="pd-spec-list__val">Oversized Round Neck</span>
+          </li>
+          <li class="pd-spec-list__item">
+            <span class="pd-spec-list__key">Printing Style</span>
+            <span class="pd-spec-list__val">
+              <ul class="pd-print-list" aria-label="Printing styles">
+                <li>Minimal text designs</li>
+                <li>Classic wording</li>
+                <li>Aesthetic graphics</li>
+              </ul>
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── SECTION 3 — MATERIAL VISUAL ── -->
+      <div class="pd-section">
+        <span class="pd-label">Material</span>
+        <h2 class="pd-heading">Fabric Quality.</h2>
+        <p class="pd-body">
+          240 GSM pure cotton — thick enough to hold its shape, soft enough for
+          all-day wear. Pre-washed to minimise shrinkage after delivery.
+        </p>
+        <!-- Fabric quality image — uses hero page image as material visual placeholder -->
+        <img
+         id="productImage"
+          src="../assets/images/products/plain-tshirts/fabricvisuals.png"
+          alt="HarVenStyles fabric close-up — 240 GSM 100% Cotton"
+          class="pd-material-img"
+          loading="lazy"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div class="pd-material-placeholder" style="display:none;">
+          <span>Fabric Visual — 240 GSM Cotton</span>
+        </div>
+      </div>
+
+      <!-- ── SECTION 4 — AVAILABLE SIZES ── -->
+      <div class="pd-section">
+        <span class="pd-label">Sizing</span>
+        <h2 class="pd-heading">Available Sizes.</h2>
+        <!-- Size chart placeholder image -->
+        <div class="pd-size-img-wrap" role="img" aria-label="Size chart placeholder">
+          <img src="../assets/images/products/plain-tshirts/size-chart.png" alt="Size Chart" class="pd-size-img">
+        </div>
+        <!-- Size tags -->
+        <div class="pd-size-tags" aria-label="Available sizes">
+          <span class="pd-size-tag">S</span>
+          <span class="pd-size-tag">M</span>
+          <span class="pd-size-tag">L</span>
+          <span class="pd-size-tag">XL</span>
+        </div>
+        <p class="pd-body" style="margin-top: 1.25rem;">
+          Refer to the <a href="shop.html#size-chart" style="color:#d4c9b4; border-bottom:1px solid rgba(212,201,180,0.4);">size chart</a>
+          on the shop page for measurements. When between sizes, go one up for a relaxed fit.
+        </p>
+      </div>
+
+      <!-- ── SECTION 5 — AVAILABLE COLORS ── -->
+      <div class="pd-section">
+        <span class="pd-label">Colours</span>
+        <h2 class="pd-heading">Available Colors.</h2>
+        <ul class="pd-color-list" aria-label="Available colours">
+          <li class="pd-color-list__item">
+            <span class="pd-color-swatch swatch--black" aria-hidden="true"></span>
+            <span class="pd-color-name">Oversized Black</span>
+          </li>
+          <li class="pd-color-list__item">
+            <span class="pd-color-swatch swatch--offwhite" aria-hidden="true"></span>
+            <span class="pd-color-name">Oversized Off White</span>
+          </li>
+          <li class="pd-color-list__item">
+            <span class="pd-color-swatch swatch--acidblack" aria-hidden="true"></span>
+            <span class="pd-color-name">Acid Wash Black</span>
+          </li>
+          <li class="pd-color-list__item">
+            <span class="pd-color-swatch swatch--acidbrown" aria-hidden="true"></span>
+            <span class="pd-color-name">Acid Wash Brown</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ── SECTION 6 — PRICING ── -->
+      <div class="pd-section">
+        <span class="pd-label">Pricing</span>
+        <h2 class="pd-heading">What It Costs.</h2>
+        <p class="pd-pricing-body" id="productPrice"></p>
+          Price varies based on design and fit. Reach out to us directly on
+          Instagram or WhatsApp to get the current pricing for your preferred
+          colour, size, and print style.
+        </p>
+        <div class="pd-pricing-links">
+          <a
+            href="https://instagram.com/harven.styles"
+            class="pd-pricing-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Contact on Instagram"
+          >Instagram — @harven.styles</a>
+          <a
+            href="https://wa.me/917305480559"
+            class="pd-pricing-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Contact on WhatsApp"
+          >WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- ── SECTION 7 — BULK ORDERS ── -->
+      <div class="pd-section">
+        <div class="pd-bulk">
+          <h2 class="pd-bulk__title">Bulk Orders Available.</h2>
+          <p class="pd-bulk__body">
+            Ordering for a team, event, or resale? We offer bulk orders with
+            special pricing on request. Get in touch and tell us your quantity,
+            colour preference, and print requirement — we'll handle the rest.
+          </p>
+          <a href="contact.html" class="pd-bulk__link">Request Bulk Pricing</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="footer__logo" />
+      <p class="footer__tagline">Wear your confidence.</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer navigation">
+      <a href="faq.html"      class="footer__link">FAQ</a>
+      <a href="shipping.html" class="footer__link">Shipping &amp; Returns</a>
+      <a href="terms.html"    class="footer__link">Terms &amp; Conditions</a>
+      <a href="about.html"    class="footer__link">About</a>
+      <a href="contact.html"  class="footer__link">Contact</a>
+      <a href="product.html"  class="footer__link">Product Details</a>
+    </nav>
+    <p class="footer__copy">&copy; <span id="year"></span> HarVenStyles. All rights reserved. Chennai, India.</p>
+  </footer>
+
+  <script src="js/modal.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cartUtils.js"></script>
+  
+  <div id="toast"></div>
+
+</body>
+</html>

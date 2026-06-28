@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — HarVenStyles</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="../assets/icons/HarVen-logo.jpeg" />
+  <style>
+    /* ── Contact page — scoped additions only ────────────────────── */
+
+    .page-banner {
+      padding: 10rem 2rem 5rem;
+      text-align: center;
+      background: #0a0a0a;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .page-banner__label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #888077;
+      margin-bottom: 1rem;
+    }
+    .page-banner__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: #f5f2ec;
+    }
+    .page-banner__sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: #888077;
+      margin-top: 1.1rem;
+    }
+
+    /* ── Order Message Preview Section ───────────────────────────── */
+    .order-preview {
+      background: #0d0d0d;
+      padding: 5rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .order-preview__inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .order-preview__label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #888077;
+      margin-bottom: 1.2rem;
+    }
+    .order-preview__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: #f5f2ec;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Message box */
+    .order-preview__box {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2rem 2.25rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      line-height: 1.85;
+      color: #c8c0b4;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .order-preview__box--empty {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: #555;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    /* The customization note — visually secondary */
+    .order-preview__custom-note {
+      margin-top: 1.25rem;
+      font-size: 0.72rem;
+      color: #555;
+      opacity: 0.75;
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    .order-preview__shop-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+      color: #d4c9b4;
+      padding-bottom: 2px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .order-preview__shop-link:hover { opacity: 0.55; }
+
+    /* ── Contact Info Section ──────────────────────────────────── */
+    .contact-info {
+      background: #0f0f0f;
+      padding: 6rem 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .contact-info__inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .contact-info__label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #888077;
+      margin-bottom: 1.2rem;
+    }
+    .contact-info__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: #f5f2ec;
+      margin-bottom: 1rem;
+    }
+    .contact-info__sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: #888077;
+      margin-bottom: 3.5rem;
+    }
+
+    /* Info cards row */
+    .contact-info__grid {
+      display: flex;
+      justify-content: center;
+      gap: 1px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .contact-info__card {
+      flex: 1 1 220px;
+      background: #0f0f0f;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.25s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
+    .contact-info__card:hover { background: #161616; }
+
+    .contact-info__card-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      opacity: 0.7;
+    }
+    .contact-info__card-label {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #888077;
+    }
+    .contact-info__card-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      color: #f5f2ec;
+      letter-spacing: 0.02em;
+    }
+    .contact-info__card-hint {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      color: #555;
+      margin-top: 0.2rem;
+    }
+
+    /* ── Toast ───────────────────────────────────────────────────── */
+    .hv-toast {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #f5f2ec;
+      color: #0a0a0a;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border-radius: 0;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+    .hv-toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Zig-Zag Blocks ──────────────────────────────────────────── */
+    .zz-block-1 {
+      display: flex;
+      align-items: stretch;
+      min-height: 90vh;
+      background: #0a0a0a;
+    }
+    .zz-block-2 {
+      display: flex;
+      align-items: stretch;
+      min-height: 90vh;
+      background: #f5f2ec;
+      flex-direction: row-reverse;
+    }
+    .zz-img-pane {
+      flex: 1 1 50%;
+      overflow: hidden;
+      position: relative;
+    }
+    .zz-img-pane img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .zz-img-pane:hover img { transform: scale(1.03); }
+    .zz-text-pane {
+      flex: 1 1 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 4rem;
+    }
+    .zz-text-inner { max-width: 440px; }
+    .zz-gap {
+      background: #0a0a0a;
+      padding: 5rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .zz-gap__inner { max-width: 600px; margin: 0 auto; }
+    .zz-gap__label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    .zz-gap__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 0.95;
+      color: #f5f2ec;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .zz-gap__body {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #888077;
+      margin-bottom: 2rem;
+    }
+    .zz-gap__cta {
+      display: inline-block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #d4c9b4;
+      color: #d4c9b4;
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+    .zz-gap__cta:hover { opacity: 0.55; }
+    .zz-label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #888077;
+      margin-bottom: 1.2rem;
+    }
+    .zz-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .zz-block-1 .zz-title { color: #f5f2ec; }
+    .zz-block-2 .zz-title { color: #0a0a0a; }
+    .zz-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.75;
+      margin-bottom: 2rem;
+    }
+    .zz-block-1 .zz-body { color: #888077; }
+    .zz-block-2 .zz-body { color: #666; }
+    .zz-link {
+      display: inline-block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+    .zz-block-1 .zz-link { color: #d4c9b4; }
+    .zz-block-2 .zz-link { color: #0a0a0a; }
+    .zz-link:hover { opacity: 0.55; }
+
+    @media (max-width: 768px) {
+  .zz-block-1,
+  .zz-block-2 {
+    flex-direction: column !important;
+    min-height: auto;
+  }
+
+  .zz-img-pane {
+    flex: none;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+  }
+
+  .zz-img-pane img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .zz-text-pane {
+    flex: none;
+    padding: 3.5rem 1.5rem;
+  }
+
+  .contact-info__grid {
+    flex-direction: column;
+  }
+
+  .contact-info__card {
+    flex: none;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- Toast notification -->
+  <div class="hv-toast" id="hvToast" role="status" aria-live="polite"></div>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation" aria-hidden="true">
+    <div class="sidebar__header">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles Logo" class="sidebar__logo" />
+      <button class="sidebar__close" id="closeBtn" aria-label="Close menu">
+        <span class="close-line"></span>
+        <span class="close-line"></span>
+      </button>
+    </div>
+    <ul class="sidebar__nav" role="list">
+      <li class="sidebar__item" style="--i:0"><a href="index.html"           class="sidebar__link">Home</a></li>
+      <li class="sidebar__item" style="--i:1"><a href="shop.html"            class="sidebar__link">Shop</a></li>
+      <li class="sidebar__item" style="--i:2"><a href="product.html"         class="sidebar__link">Product Details</a></li>
+      <li class="sidebar__item" style="--i:3"><a href="about.html"           class="sidebar__link">About</a></li>
+      <li class="sidebar__item" style="--i:4"><a href="contact.html"         class="sidebar__link">Contact</a></li>
+      <li class="sidebar__item" style="--i:5"><a href="cart.html"            class="sidebar__link">Cart</a></li>
+      <li class="sidebar__item" style="--i:6"><a href="history.html"         class="sidebar__link">Order History</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:5"><a href="faq.html"      class="sidebar__link">FAQ</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:6"><a href="shipping.html" class="sidebar__link">Shipping &amp; Returns</a></li>
+    </ul>
+    <div class="sidebar__footer">
+      <p class="sidebar__city">Chennai</p>
+      <p class="sidebar__tagline">Wear your confidence.</p>
+    </div>
+  </nav>
+
+  <!-- TOP BAR -->
+  <header class="topbar is-scrolled" id="topbar">
+    <div class="topbar__left">
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+      <a href="index.html" class="topbar__logo-link" aria-label="HarVenStyles home">
+        <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="topbar__logo" />
+      </a>
+    </div>
+  </header>
+
+  <!-- PAGE BANNER -->
+  <section class="page-banner" aria-label="Contact header">
+    <span class="page-banner__label">Get In Touch</span>
+    <h1 class="page-banner__title">Let's Talk.</h1>
+    <p class="page-banner__sub">
+      Questions, collabs, wholesale — we're listening.<br />
+      Reach us anywhere that feels easy.
+    </p>
+  </section>
+
+  <!-- ORDER MESSAGE PREVIEW -->
+  <section class="order-preview" aria-label="Your order message">
+    <div class="order-preview__inner">
+      <span class="order-preview__label">Your Order Message</span>
+      <h2 class="order-preview__title">Ready To Send.</h2>
+      <div id="orderMsgBox"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT INFO — Instagram · WhatsApp · Email -->
+  <section class="contact-info" aria-label="Contact information">
+    <div class="contact-info__inner">
+      <span class="contact-info__label">Find Us Here</span>
+      <h2 class="contact-info__title">We're One Message Away.</h2>
+      <p class="contact-info__sub">Slide into our DMs, drop a WhatsApp, or send a mail — we reply to all.</p>
+
+      <div class="contact-info__grid">
+
+        <!-- Instagram — button, handles copy + redirect -->
+        <button
+          class="contact-info__card"
+          id="instagramBtn"
+          aria-label="Message HarVenStyles on Instagram"
+        >
+          <span class="contact-info__card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <span class="contact-info__card-label">Instagram</span>
+          <span class="contact-info__card-value">@harven.styles</span>
+          <span class="contact-info__card-hint">Tap to copy &amp; open DM</span>
+        </button>
+
+        <!-- WhatsApp — button, auto-fills message -->
+        <button
+          class="contact-info__card"
+          id="whatsappBtn"
+          aria-label="Message HarVenStyles on WhatsApp"
+        >
+          <span class="contact-info__card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+          </span>
+          <span class="contact-info__card-label">WhatsApp</span>
+          <span class="contact-info__card-value">+91 73054 80559</span>
+          <span class="contact-info__card-hint">Tap to open with message</span>
+        </button>
+
+        <!-- Email — button, opens mail client -->
+        <button
+          class="contact-info__card"
+          id="emailBtn"
+          aria-label="Email HarVenStyles"
+        >
+          <span class="contact-info__card-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <polyline points="2,4 12,13 22,4"/>
+            </svg>
+          </span>
+          <span class="contact-info__card-label">Email</span>
+          <span class="contact-info__card-value">harvenstyle@email.com</span>
+          <span class="contact-info__card-hint">Tap to open mail app</span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ZIG-ZAG BLOCK 1 — Image LEFT · Text RIGHT (dark) -->
+  <section class="zz-block-1" aria-label="DM us">
+    <div class="zz-img-pane">
+      <img src="../assets/images/products/bharath/bharath fp.png" alt="HarVenStyles look — female model" />
+    </div>
+    <div class="zz-text-pane">
+      <div class="zz-text-inner">
+        <span class="zz-label">On Instagram</span>
+        <h2 class="zz-title">Slide Into<br />Our DMs.</h2>
+        <p class="zz-body">
+          Whether it's a fit question, a collab idea, or just some love —
+          our Instagram DMs are always open. We're real people behind
+          the account and we actually reply.
+        </p>
+        <button class="zz-link" id="instagramBtnAlt" style="background:none;border:none;border-bottom:1px solid #d4c9b4;cursor:pointer;">
+          Follow @harven.styles
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MIDDLE GAP -->
+  <div class="zz-gap" aria-label="Brand message">
+    <div class="zz-gap__inner">
+      <span class="zz-gap__label">The HarVen Way</span>
+      <h3 class="zz-gap__title">No Bots.<br />No Scripts.</h3>
+      <p class="zz-gap__body">
+        When you reach out to HarVenStyles, you talk to us directly —
+        the same people who design the pieces, pack the orders, and
+        care about every single customer. Chennai-made, personally handled.
+      </p>
+      <button class="zz-gap__cta" id="whatsappBtnAlt" style="background:none;border:none;border-bottom:1px solid #d4c9b4;cursor:pointer;">
+        Message Us on WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- ZIG-ZAG BLOCK 2 — Text LEFT · Image RIGHT (light) -->
+  <section class="zz-block-2" aria-label="WhatsApp us">
+    <div class="zz-img-pane">
+      <img src="../assets/images/products/bharath/bharath (4).jpeg" alt="HarVenStyles look — male model" />
+    </div>
+    <div class="zz-text-pane">
+      <div class="zz-text-inner">
+        <span class="zz-label">On WhatsApp</span>
+        <h2 class="zz-title">Quick Chat,<br />Real Help.</h2>
+        <p class="zz-body">
+          Need sizing advice? Want to know when a drop is restocked?
+          Just ping us on WhatsApp. It's the fastest way to get a real
+          answer from someone who actually knows the product.
+        </p>
+        <button class="zz-link" id="whatsappBtnAlt2" style="background:none;border:none;border-bottom:1px solid currentColor;color:#0a0a0a;cursor:pointer;">
+          Chat on WhatsApp
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="footer__logo" />
+      <p class="footer__tagline">Wear your confidence.</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer navigation">
+      <a href="faq.html"      class="footer__link">FAQ &amp; Terms</a>
+      <a href="shipping.html" class="footer__link">Shipping &amp; Returns</a>
+      <a href="about.html"    class="footer__link">About</a>
+      <a href="contact.html"  class="footer__link">Contact</a>
+      <a href="product.html"  class="footer__link">Product details</a>
+    </nav>
+    <p class="footer__copy">&copy; <span id="year"></span> HarVenStyles. All rights reserved. Chennai, India.</p>
+  </footer>
+
+   <script src="js/modal.js"></script>
+   <script src="js/main.js"></script>
+   <script src="js/cartUtils.js"></script>
+
+  <!-- ── Contact Order Messaging Logic ────────────────────────────── -->
+  <script>
+  (function () {
+    'use strict';
+    /* ── Constants ─────────────────────────────────────────────── */
+    var CART_KEY    = 'hv_cart';
+    var WA_NUMBER   = '917305480559';
+    var IG_URL      = 'https://www.instagram.com/harven.styles/';
+    var EMAIL_TO    = 'harvenstyle@email.com';
+    var EMAIL_SUBJ  = 'Order Enquiry — HarVenStyles';
+
+    /* ── Helpers ───────────────────────────────────────────────── */
+    function getCart() {
+      console.log("BUY NOW:", localStorage.getItem('hv_buy_now'));
+      console.log("CART:", localStorage.getItem('hv_cart'));
+  try {
+
+    var buyNow = JSON.parse(localStorage.getItem('hv_buy_now'));
+
+    if (buyNow) {
+      return [buyNow];
+    }
+
+    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+
+  } catch (e) {
+    return [];
+  }
+}
+
+    function getQty(item) {
+      return parseInt(item.qty || item.quantity || 1, 10) || 1;
+    }
+
+    function toNum(val) {
+      return parseFloat(String(val || '').replace(/[^\d.]/g, '')) || 0;
+    }
+
+    function fmtPrice(val) {
+      return '₹' + toNum(val).toLocaleString('en-IN');
+    }
+
+    /* ── Build the order message ────────────────────────────────── */
+    var CUSTOM_NOTE =
+      'Additional customization:\n' +
+      '(You can also place bulk orders and describe what kind of design you want on the T-shirt that you have selected. ' +
+      'You can skip this section if you want to order the default design that is present on the product that you have selected. ' +
+      'NOTE: customization is available regardless of the quantity you have ordered)';
+
+    function buildMessage(cart) {
+      if (!cart || cart.length === 0) { return null; }
+
+      var lines = cart.map(function (item) {
+        var qty      = getQty(item);
+        var unitPrice = toNum(item.price);
+        var total    = fmtPrice(unitPrice * qty);
+        var sizePart = item.size ? item.size : '—';
+        return (
+          '• Product: ' + (item.name || 'Unknown') + '\n' +
+          '  Size: ' + sizePart + '\n' +
+          '  Quantity: ' + qty + '\n' +
+          '  Price: ' + total
+        );
+      });
+
+      var cartTotal = cart.reduce(function (s, i) {
+        return s + toNum(i.price) * getQty(i);
+      }, 0);
+
+      var msg =
+        'Hi HarVenStyles!\n\n' +
+        'I would like to order:\n\n' +
+        lines.join('\n\n') +
+        '\n\nCart Total: ' + fmtPrice(cartTotal) + '\n\n' +
+        CUSTOM_NOTE;
+
+      return msg;
+    }
+
+    var DEFAULT_MSG =
+      'Seems like you haven\'t selected your order yet.\n\n' +
+      'Kindly visit the shop store and select the desired product, quantity, and size.\n\n' +
+      'You can either purchase the default design present on the T-shirt that you have selected ' +
+      'or describe the design that you want to customize by substituting the existing default design.';
+
+    /* ── Render message preview ─────────────────────────────────── */
+    function renderPreview() {
+      var cart    = getCart();
+      var msgBox  = document.getElementById('orderMsgBox');
+      if (!msgBox) { return; }
+
+      var msg = buildMessage(cart);
+
+      if (msg) {
+        /* Has cart items — show order details + secondary customization note */
+        var cartTotal = cart.reduce(function (s, i) {
+          return s + toNum(i.price) * getQty(i);
+        }, 0);
+
+        /* Main message lines without the CUSTOM_NOTE suffix for display clarity */
+        var displayLines = cart.map(function (item) {
+          var qty       = getQty(item);
+          var unitPrice = toNum(item.price);
+          var total     = fmtPrice(unitPrice * qty);
+          var sizePart  = item.size ? item.size : '—';
+          return (
+            '• Product: ' + (item.name || 'Unknown') + '\n' +
+            '  Size: ' + sizePart + '\n' +
+            '  Quantity: ' + qty + '\n' +
+            '  Price: ' + total
+          );
+        });
+
+        var displayMain =
+          'Hi HarVenStyles!\n\n' +
+          'I would like to order:\n\n' +
+          displayLines.join('\n\n') +
+          '\n\nCart Total: ' + fmtPrice(cartTotal);
+
+        msgBox.innerHTML =
+          '<div class="order-preview__box">' + escHtml(displayMain) + '</div>' +
+          '<p class="order-preview__custom-note">' + escHtml(CUSTOM_NOTE) + '</p>';
+      } else {
+        /* No cart — show default guidance */
+        msgBox.innerHTML =
+          '<div class="order-preview__box order-preview__box--empty">' +
+            escHtml(DEFAULT_MSG) +
+          '</div>' +
+          '<a href="shop.html" class="order-preview__shop-link">Browse the Shop →</a>';
+      }
+    }
+
+    function escHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/\n/g, '<br />');
+    }
+
+    /* ── Toast ──────────────────────────────────────────────────── */
+    var toastTimer = null;
+    function showToast(text) {
+      var toast = document.getElementById('hvToast');
+      if (!toast) { return; }
+      toast.textContent = text;
+      toast.classList.add('is-visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        toast.classList.remove('is-visible');
+      }, 3500);
+    }
+
+
+
+   function openWhatsApp() {
+
+  console.log("WHATSAPP CLICKED");
+
+  HVCart.placeOrder()
+    .then(function(data){
+      console.log("ORDER CREATED:", data);
+    })
+    .catch(function(err){
+      console.error("ORDER ERROR:", err);
+    });
+
+  var cart = getCart();
+
+  var msg = buildMessage(cart) || DEFAULT_MSG;
+
+  var url =
+    'https://wa.me/' +
+    WA_NUMBER +
+    '?text=' +
+    encodeURIComponent(msg);
+
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+    function openInstagram() {
+     
+      var cart = getCart();
+      var msg  = buildMessage(cart) || DEFAULT_MSG;
+
+      /* Copy message to clipboard, then open Instagram */
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(msg).then(function () {
+          showToast('Message copied successfully. Paste it into the Instagram DM.');
+          setTimeout(function () {
+            window.open(IG_URL, '_blank', 'noopener,noreferrer');
+          }, 600);
+        }).catch(function () {
+          /* Fallback for clipboard failure */
+          fallbackCopy(msg);
+          showToast('Message copied successfully. Paste it into the Instagram DM.');
+          setTimeout(function () {
+            window.open(IG_URL, '_blank', 'noopener,noreferrer');
+          }, 600);
+        });
+      } else {
+        fallbackCopy(msg);
+        showToast('Message copied successfully. Paste it into the Instagram DM.');
+        setTimeout(function () {
+          window.open(IG_URL, '_blank', 'noopener,noreferrer');
+        }, 600);
+      }
+    }
+
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0;';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function openEmail() {
+      
+      var cart = getCart();
+      var msg  = buildMessage(cart) || DEFAULT_MSG;
+      var href =
+        'mailto:' + EMAIL_TO +
+        '?subject=' + encodeURIComponent(EMAIL_SUBJ) +
+        '&body='    + encodeURIComponent(msg);
+      window.location.href = href;
+    }
+
+    /* ── Wire up all buttons ────────────────────────────────────── */
+    function bindBtn(id, handler) {
+      var el = document.getElementById(id);
+      if (el) { el.addEventListener('click', handler); }
+    }
+
+    bindBtn('whatsappBtn',     openWhatsApp);
+    bindBtn('whatsappBtnAlt',  openWhatsApp);
+    bindBtn('whatsappBtnAlt2', openWhatsApp);
+    bindBtn('instagramBtn',    openInstagram);
+    bindBtn('instagramBtnAlt', openInstagram);
+    bindBtn('emailBtn',        openEmail);
+
+    /* ── Init ───────────────────────────────────────────────────── */
+    renderPreview();
+
+  }());
+  </script>
+  
+
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account — HarVenStyles</title>
+  <link rel="icon" type="image/png" href="../assets/icons/HarVen-logo.jpeg" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Account page — scoped ───────────────────────────────────── */
+
+    .page-banner {
+      padding: 10rem 2rem 5rem;
+      text-align: center;
+      background: #0a0a0a;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .page-banner__label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem; font-weight: 400;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: #888077; margin-bottom: 1rem;
+    }
+    .page-banner__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      line-height: 0.9; letter-spacing: 0.02em;
+      color: #f5f2ec;
+    }
+
+    /* ── Account section ─────────────────────────────────────────── */
+    .account-section {
+      background: #0a0a0a;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 2rem 8rem;
+    }
+    .account-card {
+      width: 100%;
+      max-width: 460px;
+      background: #0f0f0f;
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Profile circle */
+    .account-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 0.05em;
+      color: #f5f2ec;
+      margin-bottom: 2rem;
+      flex-shrink: 0;
+    }
+
+    /* Name & email */
+    .account-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 0.04em;
+      color: #f5f2ec; margin-bottom: 0.35rem;
+      text-align: center;
+    }
+    .account-email {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1rem;
+      color: #888077; margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    /* Divider */
+    .account-divider {
+      width: 100%; height: 1px;
+      background: rgba(255,255,255,0.07);
+      margin-bottom: 2.5rem;
+    }
+
+    /* Buttons */
+    .account-btn {
+      width: 100%; font-family: 'Barlow', sans-serif;
+      font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      padding: 0.85rem 1rem; cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+      margin-bottom: 0.75rem;
+    }
+    .account-btn:last-child { margin-bottom: 0; }
+
+    /* Logout — outlined */
+    .account-btn--logout {
+      background: transparent;
+      border-color: rgba(255,255,255,0.18);
+      color: #f5f2ec;
+    }
+    .account-btn--logout:hover {
+      background: #f5f2ec; border-color: #f5f2ec; color: #0a0a0a;
+    }
+
+    /* Delete — red-tinted outline */
+    .account-btn--delete {
+      background: transparent;
+      border-color: rgba(200,80,80,0.3);
+      color: #888077;
+    }
+    .account-btn--delete:hover {
+      border-color: #c85050; color: #c85050;
+    }
+
+    /* Redirect message shown when not logged in */
+    .account-redirect {
+      text-align: center; padding: 4rem 2rem;
+    }
+    .account-redirect__text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.1rem;
+      color: #888077; margin-bottom: 1.5rem;
+    }
+    .account-redirect__btn {
+      display: inline-block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #f5f2ec; padding: 0.85rem 2rem;
+      text-decoration: none;
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .account-redirect__btn:hover {
+      background: #f5f2ec; border-color: #f5f2ec; color: #0a0a0a;
+    }
+
+    /* Confirm delete modal */
+    .confirm-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.78);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .confirm-overlay.is-open { opacity: 1; pointer-events: all; }
+    .confirm-box {
+      background: #0f0f0f;
+      border: 1px solid rgba(255,255,255,0.08);
+      width: 100%; max-width: 380px;
+      padding: 2.5rem 2rem;
+      transform: translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .confirm-overlay.is-open .confirm-box { transform: translateY(0); }
+    .confirm-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; letter-spacing: 0.04em;
+      color: #f5f2ec; margin-bottom: 0.75rem;
+    }
+    .confirm-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1rem;
+      color: #888077; margin-bottom: 2rem; line-height: 1.65;
+    }
+    .confirm-actions { display: flex; gap: 0.75rem; }
+    .confirm-btn {
+      flex: 1; font-family: 'Barlow', sans-serif;
+      font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.75rem 0.5rem; cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.2s, color 0.2s;
+    }
+    .confirm-btn--cancel {
+      background: transparent; border-color: rgba(255,255,255,0.15); color: #888077;
+    }
+    .confirm-btn--cancel:hover { border-color: #f5f2ec; color: #f5f2ec; }
+    .confirm-btn--confirm {
+      background: transparent; border-color: rgba(200,80,80,0.4); color: #c85050;
+    }
+    .confirm-btn--confirm:hover { background: #c85050; border-color: #c85050; color: #fff; }
+
+    @media (max-width: 480px) { .account-card { padding: 2rem 1.5rem; } }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation" aria-hidden="true">
+    <div class="sidebar__header">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles Logo" class="sidebar__logo" />
+      <button class="sidebar__close" id="closeBtn" aria-label="Close menu">
+        <span class="close-line"></span><span class="close-line"></span>
+      </button>
+    </div>
+    <ul class="sidebar__nav" role="list">
+      <li class="sidebar__item" style="--i:0"><a href="index.html"   class="sidebar__link">Home</a></li>
+      <li class="sidebar__item" style="--i:1"><a href="shop.html"    class="sidebar__link">Shop</a></li>
+      <li class="sidebar__item" style="--i:2"><a href="product.html" class="sidebar__link">Product Details</a></li>
+      <li class="sidebar__item" style="--i:3"><a href="about.html"   class="sidebar__link">About</a></li>
+      <li class="sidebar__item" style="--i:4"><a href="contact.html" class="sidebar__link">Contact</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:5"><a href="faq.html"      class="sidebar__link">FAQ</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:6"><a href="shipping.html" class="sidebar__link">Shipping &amp; Returns</a></li>
+    </ul>
+    <div class="sidebar__footer">
+      <p class="sidebar__city">Chennai</p>
+      <p class="sidebar__tagline">Wear your confidence.</p>
+    </div>
+  </nav>
+
+  <!-- TOP BAR -->
+  <header class="topbar is-scrolled" id="topbar">
+    <div class="topbar__left">
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+      <a href="index.html" class="topbar__logo-link" aria-label="HarVenStyles home">
+        <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="topbar__logo" />
+      </a>
+    </div>
+  </header>
+
+  <!-- PAGE BANNER -->
+  <section class="page-banner" aria-label="Account header">
+    <span class="page-banner__label">Profile</span>
+    <h1 class="page-banner__title">My Account.</h1>
+  </section>
+
+  <!-- ACCOUNT SECTION -->
+  <section class="account-section" aria-label="Account details">
+    <div id="accountRoot"></div>
+  </section>
+
+ 
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="footer__logo" />
+      <p class="footer__tagline">Wear your confidence.</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer navigation">
+      <a href="faq.html"      class="footer__link">FAQ &amp; Terms</a>
+      <a href="shipping.html" class="footer__link">Shipping &amp; Returns</a>
+      <a href="about.html"    class="footer__link">About</a>
+      <a href="contact.html"  class="footer__link">Contact</a>
+    </nav>
+    <p class="footer__copy">&copy; <span id="year"></span> HarVenStyles. All rights reserved. Chennai, India.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    var SESSION_KEY  = 'hv_session';
+    var USERS_KEY    = 'hv_users';
+    var CART_KEY     = 'hv_cart';
+    var API_BASE     = 'http://192.168.31.65:5000/api';
+
+   var root = document.getElementById('accountRoot');
+
+    /* ── Session ────────────────────────────────────────────────── */
+    function getSession() {
+      try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch(e) { return null; }
+    }
+
+    /* ── Render ─────────────────────────────────────────────────── */
+    function render() {
+      var session = getSession();
+
+      if (!session || !session.name) {
+        /* Not logged in */
+        root.innerHTML =
+          '<div class="account-redirect">' +
+            '<p class="account-redirect__text">You are not logged in.</p>' +
+            '<a href="index.html" class="account-redirect__btn">Go to Home</a>' +
+          '</div>';
+        return;
+      }
+
+      var initial = session.name.charAt(0).toUpperCase();
+
+      root.innerHTML =
+        '<div class="account-card">' +
+          '<div class="account-avatar">' + escHtml(initial) + '</div>' +
+          '<h2 class="account-name">'  + escHtml(session.name)  + '</h2>' +
+          '<p class="account-email">'  + escHtml(session.email) + '</p>' +
+          '<div class="account-divider"></div>' +
+          '<button class="account-btn account-btn--logout"  id="logoutBtn">Log Out</button>' +
+        '</div>';
+
+      /* Wire buttons after inserting into DOM */
+      document.getElementById('logoutBtn').addEventListener('click', logout);
+    }
+
+    /* ── Logout ─────────────────────────────────────────────────── */
+    function logout() {
+      localStorage.removeItem(SESSION_KEY);
+      window.location.href = 'index.html';
+    }
+
+    /* ── Delete account ─────────────────────────────────────────── */
+    async function deleteAccount() {
+      var session = getSession();
+
+      /* Try backend delete */
+      try {
+        if (session && session.token) {
+          await fetch(API_BASE + '/users/me', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + session.token
+            }
+          });
+        }
+      } catch(e) { /* backend down — continue with local cleanup */ }
+
+      /* Remove from localStorage users store */
+      if (session && session.email) {
+        var users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+        users = users.filter(function(u) { return u.email !== session.email; });
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      }
+
+      /* Clear all user data */
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(HISTORY_KEY);
+      localStorage.removeItem(CART_KEY);
+
+      window.location.href = 'index.html';
+    }
+
+
+    /* ── Tiny XSS-safe escaper ──────────────────────────────────── */
+    function escHtml(s) {
+      return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    /* ── Init ───────────────────────────────────────────────────── */
+    render();
+
+  }());
+  </script>
+  
+
+</body>
+</html>

@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order History — HarVenStyles</title>
+  <link rel="icon" type="image/png" href="../assets/icons/HarVen-logo.jpeg" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── history.html — scoped styles only ──────────────────────── */
+    .page-banner {
+      padding: 10rem 2rem 5rem; text-align: center;
+      background: #0a0a0a; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .page-banner__label {
+      display: block; font-family: 'Barlow', sans-serif; font-size: 0.7rem;
+      font-weight: 400; letter-spacing: 0.35em; text-transform: uppercase;
+      color: #888077; margin-bottom: 1rem;
+    }
+    .page-banner__title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 10vw, 8rem);
+      line-height: 0.9; letter-spacing: 0.02em; color: #f5f2ec;
+    }
+    .page-banner__sub {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.15rem; color: #888077; margin-top: 1.1rem;
+    }
+
+    /* ── Info note ───────────────────────────────────────────────── */
+    .history-note {
+      background: #0f0f0f; border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 1.75rem 2rem;
+    }
+    .history-note__inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .history-note__icon { flex-shrink: 0; margin-top: 2px; opacity: 0.45; }
+    .history-note__text {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1rem; line-height: 1.7; color: #888077;
+    }
+    .history-note__text strong { font-style: normal; font-weight: 400; color: #d4c9b4; }
+
+    /* ── Section wrapper ─────────────────────────────────────────── */
+    .history-section { background: #0a0a0a; min-height: 60vh; padding: 5rem 2rem 8rem; }
+    .history-section__inner { max-width: 860px; margin: 0 auto; }
+
+    /* ── Count + clear row ───────────────────────────────────────── */
+    .history-top-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2.5rem; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .history-count-label {
+      font-family: 'Barlow', sans-serif; font-size: 0.65rem; font-weight: 400;
+      letter-spacing: 0.35em; text-transform: uppercase; color: #555;
+    }
+    .history-clear-btn {
+      font-family: 'Barlow', sans-serif; font-size: 0.62rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; padding: 0.55rem 1.2rem;
+      border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #555;
+      cursor: pointer; transition: border-color 0.25s, color 0.25s;
+    }
+    .history-clear-btn:hover { border-color: rgba(200,80,80,0.5); color: #c85050; }
+
+    /* ── Order card ──────────────────────────────────────────────── */
+    .order-card {
+      border: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 2.5rem;
+      background: #0c0c0c;
+    }
+    .order-card__header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.75rem;
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: #0f0f0f;
+    }
+    .order-card__meta { display: flex; flex-direction: column; gap: 0.2rem; }
+    .order-card__id {
+      font-family: 'Barlow', sans-serif; font-size: 0.6rem;
+      letter-spacing: 0.18em; text-transform: uppercase; color: #444;
+    }
+    .order-card__date {
+      font-family: 'Barlow', sans-serif; font-size: 0.68rem;
+      font-weight: 300; letter-spacing: 0.1em; color: #555;
+    }
+    .order-card__right {
+      display: flex; align-items: center; gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .order-card__total {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;
+      letter-spacing: 0.06em; color: #f5f2ec;
+    }
+
+    /* ── Status pill ─────────────────────────────────────────────── */
+    .order-status {
+      display: inline-block; font-family: 'Barlow', sans-serif;
+      font-size: 0.56rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 0.22rem 0.75rem;
+    }
+    .order-status--pending   { background: rgba(212,201,180,0.10); color: #d4c9b4; border: 1px solid rgba(212,201,180,0.25); }
+    .order-status--confirmed { background: rgba(100,200,120,0.08); color: #7acc8a; border: 1px solid rgba(100,200,120,0.20); }
+    .order-status--shipped   { background: rgba(100,140,220,0.08); color: #7aaae0; border: 1px solid rgba(100,140,220,0.20); }
+    .order-status--delivered { background: rgba(180,210,100,0.08); color: #b4d264; border: 1px solid rgba(180,210,100,0.20); }
+    .order-status--cancelled { background: rgba(200,80,80,0.06);   color: #c85050; border: 1px solid rgba(200,80,80,0.20); }
+
+    /* ── Header action buttons ───────────────────────────────────── */
+    .order-card__contact {
+      display: inline-block; font-family: 'Barlow', sans-serif; font-size: 0.6rem;
+      font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.5rem 1.1rem; border: 1px solid rgba(255,255,255,0.15);
+      color: #d4c9b4; text-decoration: none; white-space: nowrap;
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+    .order-card__contact:hover { background: #f5f2ec; border-color: #f5f2ec; color: #0a0a0a; }
+
+    .order-card__remove {
+      display: inline-block; font-family: 'Barlow', sans-serif; font-size: 0.58rem;
+      font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 0.45rem 0.9rem; border: 1px solid rgba(200,80,80,0.25);
+      color: #c85050; background: transparent; cursor: pointer; white-space: nowrap;
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+    .order-card__remove:hover { background: rgba(200,80,80,0.1); border-color: rgba(200,80,80,0.5); }
+
+    /* ── Item rows ───────────────────────────────────────────────── */
+    .order-items-list { list-style: none; padding: 0; margin: 0; }
+    .order-item {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.4rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .order-item:last-child { border-bottom: none; }
+    .order-item__img-wrap {
+      width: 76px; height: 94px; flex-shrink: 0;
+      overflow: hidden; background: #111;
+    }
+    .order-item__img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .order-item:hover .order-item__img { transform: scale(1.04); }
+    .order-item__img-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+    }
+    .order-item__info { flex: 1; min-width: 0; }
+    .order-item__name {
+      font-family: 'Barlow', sans-serif; font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #f5f2ec;
+      margin-bottom: 0.28rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .order-item__meta {
+      font-family: 'Barlow', sans-serif; font-size: 0.64rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #555; margin-bottom: 0.28rem;
+    }
+    .order-item__price {
+      font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+      font-weight: 300; color: #888077;
+    }
+    .order-item__subtotal {
+      font-family: 'Cormorant Garamond', serif; font-size: 0.88rem;
+      color: #444; margin-top: 0.12rem;
+    }
+
+    /* ── Card footer — reorder ───────────────────────────────────── */
+    .order-card__footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; justify-content: flex-end; gap: 0.75rem;
+      flex-wrap: wrap; background: #0c0c0c;
+    }
+    .order-card__reorder {
+      display: inline-block; font-family: 'Barlow', sans-serif; font-size: 0.6rem;
+      font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.6rem 1.4rem; border: 1px solid rgba(212,201,180,0.3);
+      color: #d4c9b4; background: transparent; cursor: pointer; white-space: nowrap;
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+    .order-card__reorder:hover {
+      background: rgba(212,201,180,0.08); border-color: #d4c9b4; color: #f5f2ec;
+    }
+
+    /* ── Empty state ─────────────────────────────────────────────── */
+    .history-empty { text-align: center; padding: 5rem 2rem 3rem; }
+    .history-empty__icon { line-height: 1; margin-bottom: 1.5rem; opacity: 0.14; }
+    .history-empty__title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 6vw, 4rem);
+      letter-spacing: 0.04em; line-height: 0.95; color: #f5f2ec; margin-bottom: 0.85rem;
+    }
+    .history-empty__sub {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1.1rem; color: #555; margin-bottom: 2.5rem;
+    }
+    .history-empty__btn {
+      display: inline-block; font-family: 'Barlow', sans-serif; font-size: 0.7rem;
+      font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.2); color: #f5f2ec;
+      padding: 0.85rem 2.2rem; text-decoration: none;
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .history-empty__btn:hover { background: #f5f2ec; border-color: #f5f2ec; color: #0a0a0a; }
+
+    /* ── Toast ───────────────────────────────────────────────────── */
+    .hv-toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
+      background: #1a1a1a; border: 1px solid rgba(212,201,180,0.25);
+      color: #d4c9b4; font-family: 'Barlow', sans-serif; font-size: 0.68rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.85rem 1.5rem;
+      transform: translateY(1rem); opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .hv-toast.is-visible { transform: translateY(0); opacity: 1; }
+
+    @media (max-width: 600px) {
+      .order-card__header { flex-direction: column; align-items: flex-start; }
+      .order-card__right  { gap: 0.75rem; }
+      .order-item         { gap: 1rem; }
+      .order-item__img-wrap { width: 60px; height: 74px; }
+      .history-note__inner  { flex-direction: column; gap: 0.5rem; }
+      .history-top-row      { flex-direction: column; align-items: flex-start; }
+      .order-card__footer   { justify-content: flex-start; }
+    }
+    .order-status--confirmation-pending {
+  background: rgba(255, 193, 7, 0.12);
+  color: #ffc107;
+}
+
+.order-status--paid {
+  background: rgba(0, 200, 120, 0.12);
+  color: #00c878;
+}
+
+.order-status--confirmed {
+  background: rgba(80, 160, 255, 0.12);
+  color: #50a0ff;
+}
+
+.order-status--shipped {
+  background: rgba(180, 120, 255, 0.12);
+  color: #b478ff;
+}
+
+.order-status--delivered {
+  background: rgba(0, 255, 180, 0.12);
+  color: #00ffb4;
+}
+
+.cancel-order-btn {
+
+  background: transparent;
+  color: #c89b3c;
+
+  border: 1px solid #c89b3c;
+
+  padding: 10px 18px;
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  font-size: .9rem;
+  font-weight: 600;
+
+  transition: all .3s ease;
+
+}
+.history-remove-btn{
+
+position:absolute;
+
+top:14px;
+
+right:14px;
+
+width:30px;
+
+height:30px;
+
+border:none;
+
+border-radius:50%;
+
+background:#2b2b2b;
+
+color:#fff;
+
+cursor:pointer;
+
+font-size:16px;
+
+transition:.25s;
+
+}
+
+.history-remove-btn:hover{
+
+background:#d64545;
+
+transform:scale(1.08);
+
+}
+
+.order-card{
+
+position:relative;
+
+}
+
+.cancel-order-btn:hover {
+
+  background: #c89b3c;
+  color: #111;
+
+}
+
+.history-clear-wrap{
+    position:relative;
+    display:inline-block;
+}
+
+.clear-history-hint{
+
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+
+  width:260px;
+
+  background:#171717;
+  color:#f5f2ec;
+
+  padding:12px 16px;
+
+  border-radius:12px;
+
+  font-size:.82rem;
+  line-height:1.5;
+
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+
+  opacity:0;
+  visibility:hidden;
+
+  transform:translateY(10px);
+
+  transition:
+    opacity .25s ease,
+    transform .25s ease,
+    visibility .25s ease;
+
+  pointer-events:none;
+
+  z-index:999999;
+}
+
+.clear-history-hint.is-visible{
+
+  opacity:1;
+  visibility:visible;
+
+  transform:translateY(0);
+
+}
+
+.clear-history-hint.show{
+
+    opacity:1;
+    visibility:visible;
+
+    transform:translateY(0);
+
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Toast -->
+  <div class="hv-toast" id="hvToast" role="status" aria-live="polite"></div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation" aria-hidden="true">
+    <div class="sidebar__header">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles Logo" class="sidebar__logo" />
+      <button class="sidebar__close" id="closeBtn" aria-label="Close menu">
+        <span class="close-line"></span><span class="close-line"></span>
+      </button>
+    </div>
+    <ul class="sidebar__nav" role="list">
+      <li class="sidebar__item" style="--i:0"><a href="index.html"   class="sidebar__link">Home</a></li>
+      <li class="sidebar__item" style="--i:1"><a href="shop.html"    class="sidebar__link">Shop</a></li>
+      <li class="sidebar__item" style="--i:2"><a href="product.html" class="sidebar__link">Product Details</a></li>
+      <li class="sidebar__item" style="--i:3"><a href="about.html"   class="sidebar__link">About</a></li>
+      <li class="sidebar__item" style="--i:4"><a href="contact.html" class="sidebar__link">Contact</a></li>
+      <li class="sidebar__item" style="--i:5"><a href="cart.html"    class="sidebar__link">Cart</a></li>
+      <li class="sidebar__item" style="--i:6"><a href="history.html" class="sidebar__link">Order History</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:7"><a href="faq.html"      class="sidebar__link">FAQ</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:8"><a href="shipping.html" class="sidebar__link">Shipping &amp; Returns</a></li>
+    </ul>
+    <div class="sidebar__footer">
+      <p class="sidebar__city">Chennai</p>
+      <p class="sidebar__tagline">Wear your confidence.</p>
+    </div>
+  </nav>
+
+  <header class="topbar is-scrolled" id="topbar">
+    <div class="topbar__left">
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+      <a href="index.html" class="topbar__logo-link" aria-label="HarVenStyles home">
+        <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="topbar__logo" />
+      </a>
+    </div>
+  </header>
+
+  <!-- PAGE BANNER -->
+  <section class="page-banner" aria-label="Order history header">
+    <span class="page-banner__label">Track Your Picks</span>
+    <h1 class="page-banner__title">Order History.</h1>
+    <p class="page-banner__sub">Every order you've placed — all in one place.</p>
+  </section>
+
+  <!-- INFO NOTE -->
+  <div class="history-note" role="note">
+    <div class="history-note__inner">
+      <span class="history-note__icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </span>
+      <p class="history-note__text">
+        <strong>HarVenStyles</strong> orders are confirmed personally — reach out via
+        WhatsApp or Instagram to finalise size, colour, and delivery details.
+        Orders start as <strong>Confirmation Pending</strong> and are updated once confirmed by our team.
+      </p>
+    </div>
+  </div>
+
+  <!-- HISTORY CONTENT -->
+  <section class="history-section" aria-label="Order history">
+    <div class="history-section__inner">
+      <div id="historyRoot"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="footer__logo" />
+      <p class="footer__tagline">Wear your confidence.</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer navigation">
+      <a href="faq.html"      class="footer__link">FAQ &amp; Terms</a>
+      <a href="shipping.html" class="footer__link">Shipping &amp; Returns</a>
+      <a href="about.html"    class="footer__link">About</a>
+      <a href="contact.html"  class="footer__link">Contact</a>
+      <a href="history.html"  class="footer__link">Order History</a>
+    </nav>
+    <p class="footer__copy">&copy; <span id="year"></span> HarVenStyles. All rights reserved. Chennai, India.</p>
+  </footer>
+
+  <script src="js/modal.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cartUtils.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ── Constants ───────────────────────────────────────────────── */
+    var CART_KEY   = 'hv_cart';
+    var WA_NUMBER  = '917305480559';
+
+    /* ── Status definitions ──────────────────────────────────────── */
+    var STATUSES = [
+  { key: 'pending',  label: 'Confirmation Pending', cls: 'order-status--pending' },
+
+  { key: 'paid',     label: 'Payment Completed', cls: 'order-status--paid' },
+
+  { key: 'confirmed', label: 'Order Confirmed', cls: 'order-status--confirmed' },
+
+  { key: 'shipped',  label: 'Shipped', cls: 'order-status--shipped' },
+
+  { key: 'delivered', label: 'Delivered', cls: 'order-status--delivered' },
+
+  { key: 'cancelled', label: 'Cancelled', cls: 'order-status--cancelled' }
+];
+    /* ── DOM refs ────────────────────────────────────────────────── */
+    var root       = document.getElementById('historyRoot');
+    var toastEl    = document.getElementById('hvToast');
+    var toastTimer = null;
+
+    /* ── Toast ───────────────────────────────────────────────────── */
+    function showToast(msg) {
+      if (!toastEl) { return; }
+      toastEl.textContent = msg;
+      toastEl.classList.add('is-visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        toastEl.classList.remove('is-visible');
+      }, 2800);
+    }
+
+
+    /* ── Formatting helpers ──────────────────────────────────────── */
+    function esc(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function toNum(val) {
+      return parseFloat(String(val || 0).replace(/[^\d.]/g, '')) || 0;
+    }
+    function fmtPrice(val) {
+      return '₹' + toNum(val).toLocaleString('en-IN');
+    }
+    function fmtDate(iso) {
+      if (!iso) { return '—'; }
+      try {
+        var d = new Date(iso);
+        return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) +
+               ' · ' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+      } catch (e) { return iso; }
+    }
+    function getQty(item) {
+      return parseInt(item.qty || item.quantity || 1, 10) || 1;
+    }
+
+    /* ── Resolve status object from stored status string ─────────── */
+    function resolveStatus(raw) {
+  var s = (raw || '').toLowerCase();
+
+  if (s.indexOf('cancel') !== -1) {
+    return STATUSES[5];
+  }
+
+  if (s.indexOf('deliver') !== -1) {
+    return STATUSES[4];
+  }
+
+  if (s.indexOf('ship') !== -1) {
+    return STATUSES[3];
+  }
+
+  if (s.indexOf('confirm') !== -1 && s.indexOf('pending') === -1) {
+    return STATUSES[2];
+  }
+
+  if (s.indexOf('paid') !== -1) {
+    return STATUSES[1];
+  }
+
+  return STATUSES[0];
+}
+
+    /* ── Build single item row ───────────────────────────────────── */
+    function buildItemRow(item) {
+      var imgSrc   = item.image || item.img || '';
+      var imgHtml  = imgSrc
+        ? '<img src="' + esc(imgSrc) + '" alt="' + esc(item.name) + '" class="order-item__img" loading="lazy" />'
+        : '<div class="order-item__img-placeholder" aria-hidden="true"></div>';
+
+      var unitPrice = toNum(item.price);
+      var qty       = getQty(item);
+      var subtotal  = unitPrice * qty;
+
+      var metaParts = [];
+      if (item.size) { metaParts.push('Size: ' + item.size); }
+      metaParts.push('Qty: ' + qty);
+
+      return (
+        '<li class="order-item">' +
+          '<div class="order-item__img-wrap">' + imgHtml + '</div>' +
+          '<div class="order-item__info">' +
+            '<p class="order-item__name">' + esc(item.name || 'Unknown Product') + '</p>' +
+            '<p class="order-item__meta">' + esc(metaParts.join(' · ')) + '</p>' +
+            '<p class="order-item__price">' + fmtPrice(unitPrice) + ' each</p>' +
+            (qty > 1
+              ? '<p class="order-item__subtotal">Subtotal: ' + fmtPrice(subtotal) + '</p>'
+              : '') +
+          '</div>' +
+        '</li>'
+      );
+    }
+
+    /* ── Build single order card ─────────────────────────────────── */
+    function buildOrderCard(order, orderIndex) {
+      var items      = Array.isArray(order.items) ? order.items : [];
+      var orderId    = String(order._id || '').slice(-8).toUpperCase() || ('ORD' + (orderIndex + 1));
+      var statusObj  = resolveStatus(order.status);
+      console.log("ORDER STATUS:", order.status);
+      var timestamp  = order.createdAt || order.timestamp || '';
+      var totalPrice = order.totalPrice || order.price || 0;
+
+     var cancelButton = '';
+     var removeButton = '';
+
+var status = (order.status || "").trim().toLowerCase();
+
+if (
+  status === "cancelled" ||
+  status === "delivered"
+) {
+  removeButton =
+    '<button class="history-remove-btn" data-id="' +
+    order._id +
+    '" title="Remove from history">✕</button>';
+}
+
+var status = (order.status || "").trim().toLowerCase();
+
+if (
+  status === "pending"
+) {
+
+  cancelButton =
+    '<button class="cancel-order-btn" data-id="' +
+    order._id +
+    '">Cancel Order</button>';
+
+}
+      
+
+      /* Auto-compute total if not stored */
+      if (!totalPrice && items.length) {
+        totalPrice = items.reduce(function (s, i) {
+          return s + toNum(i.price) * getQty(i);
+        }, 0);
+      }
+
+      /* WhatsApp confirmation URL */
+     var waLines = items.map(function (i) {
+
+  var qty = getQty(i);
+
+  var price =
+    (parseFloat(String(i.price).replace(/[^\d.]/g, '')) || 0) * qty;
+
+  return (
+    '• Product: ' + i.name + '\n' +
+    '• Size: ' + (i.size || 'Not selected') + '\n' +
+    '• Quantity: ' + qty + '\n' +
+    '• Total Price: ₹' + price + '\n'
+  );
+
+});
+
+var waMsg =
+  'Hi HarVenStyles!\n\n' +
+  'I would like to order:\n\n' +
+  waLines.join('\n') +
+  '\nAdditional customization:\n' +
+  '(You can place bulk orders and describe what kind of design you want on the T-shirt that you have selected. You can skip this section if you want to order the default design that is present on the product that you have selected.)';
+
+var waUrl =
+  'https://wa.me/' +
+  WA_NUMBER +
+  '?text=' +
+  encodeURIComponent(waMsg);
+
+      var itemsHtml = '<ul class="order-items-list" aria-label="Items in order ' + esc(orderId) + '">';
+      if (items.length) {
+        items.forEach(function (item) { itemsHtml += buildItemRow(item); });
+      } else {
+        itemsHtml +=
+          '<li class="order-item">' +
+            '<div class="order-item__info">' +
+              '<p class="order-item__meta" style="color:#444;font-style:italic;">No item details stored.</p>' +
+            '</div>' +
+          '</li>';
+      }
+      itemsHtml += '</ul>';
+
+     return (
+  '<div class="order-card" data-order-index="' + orderIndex + '">' +
+removeButton +
+
+    '<div class="order-card__header">' +
+
+      '<div class="order-card__meta">' +
+        '<span class="order-card__id">Order #' + esc(orderId) + '</span>' +
+        '<span class="order-card__date">' + esc(fmtDate(timestamp)) + '</span>' +
+      '</div>' +
+
+      '<div class="order-card__right">' +
+        '<span class="order-status ' + statusObj.cls + '">' +
+          esc(statusObj.label) +
+        '</span>' +
+
+        '<span class="order-card__total">' +
+          fmtPrice(totalPrice) +
+        '</span>' +
+
+        cancelButton +
+
+        '<a href="' + esc(waUrl) +
+        '" target="_blank" rel="noopener noreferrer" class="order-card__contact">' +
+          'Confirm via WhatsApp' +
+        '</a>' +
+      '</div>' +
+
+    '</div>' +
+
+    itemsHtml +
+
+  '</div>'
+);
+}
+
+ 
+   /* ── Render ──────────────────────────────────────────────────── */
+async function render() {
+
+  var orders = await HVCart.fetchOrders();
+
+  console.log("ALL ORDERS:", orders);
+
+  var session = JSON.parse(
+    localStorage.getItem('hv_session') || '{}'
+  );
+  var html   = '';
+
+      if (!orders || orders.length === 0) {
+        html =
+          '<div class="history-empty">' +
+            '<div class="history-empty__icon" aria-hidden="true">' +
+              '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" ' +
+                   'fill="none" stroke="currentColor" stroke-width="1.1" ' +
+                   'stroke-linecap="round" stroke-linejoin="round">' +
+                '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
+                '<polyline points="14 2 14 8 20 8"/>' +
+                '<line x1="16" y1="13" x2="8" y2="13"/>' +
+                '<line x1="16" y1="17" x2="8" y2="17"/>' +
+              '</svg>' +
+            '</div>' +
+            '<h2 class="history-empty__title">No Orders Yet.</h2>' +
+            '<p class="history-empty__sub">' +
+              'Head to the shop, pick your fits, and place an order from the cart.' +
+            '</p>' +
+            '<a href="shop.html" class="history-empty__btn">Browse the Drop</a>' +
+          '</div>';
+
+        root.innerHTML = html;
+        return;
+      }
+
+     /* Count row */
+var word = orders.length === 1 ? 'order' : 'orders';
+
+html +=
+  '<div class="history-top-row">' +
+
+    '<span class="history-count-label">' +
+      orders.length + ' ' + word + ' placed' +
+    '</span>' +
+
+    '<div class="history-clear-wrap">' +
+
+      '<button class="history-clear-btn" id="historyClearBtn">' +
+        'Clear All History' +
+      '</button>' +
+
+      '<div id="clearHistoryHint" class="clear-history-hint">' +
+        'You can clear your history only after all your orders have been delivered or cancelled.' +
+      '</div>' +
+
+    '</div>' +
+
+  '</div>';
+
+      /* Order cards */
+      orders.forEach(function (order, i) {
+        html += buildOrderCard(order, i);
+      });
+
+      root.innerHTML = html;
+      bindEvents();
+     
+
+    }
+
+    /* ── Bind events (called once after every render) ────────────── */
+   async function bindEvents() {
+
+ /* Clear all history */
+var clearBtn = document.getElementById('historyClearBtn');
+
+if (clearBtn) {
+
+  var orders = await HVCart.fetchOrders();
+
+  var canClear = orders.every(function(order){
+    return (
+      order.status === 'Delivered' ||
+      order.status === 'Cancelled'
+    );
+  });
+
+  clearBtn.addEventListener('click', function(){
+
+    if (!canClear) {
+
+  console.log("Button clicked");
+  console.log(document.getElementById("clearHistoryHint"));    
+
+  var hint = document.getElementById('clearHistoryHint');
+
+  if (hint) {
+
+    hint.classList.add('is-visible');
+
+    clearTimeout(window.clearHistoryTimer);
+
+    window.clearHistoryTimer = setTimeout(function () {
+      hint.classList.remove('is-visible');
+    }, 3000);
+
+  }
+
+  return;
+}
+
+    if(!confirm("Clear your entire order history? This cannot be undone.")){
+      return;
+    }
+
+    var session = JSON.parse(
+      localStorage.getItem('hv_session') || '{}'
+    );
+
+    fetch(
+      'http://192.168.31.65:5000/api/orders/clear/my-history',
+      {
+        method:'DELETE',
+        headers:{
+          Authorization:'Bearer ' + session.token
+        }
+      }
+    )
+    .then(async function(res){
+
+      var data = await res.json();
+
+      if(!res.ok){
+        showToast(data.message);
+        return;
+      }
+
+      render();
+
+      showToast("History cleared successfully.");
+
+    })
+    .catch(function(err){
+
+      console.error(err);
+
+      showToast("Something went wrong.");
+
+    });
+
+  });
+
+}
+/* Cancel Order buttons */
+document.querySelectorAll('.cancel-order-btn').forEach(function(btn){
+
+  btn.addEventListener('click', async function(){
+
+    var ok = await showConfirm(
+  "Cancel this order?"
+);
+
+if (!ok) {
+  return;
+}
+
+    var session = JSON.parse(
+      localStorage.getItem('hv_session') || '{}'
+    );
+
+    try{
+
+      var res = await fetch(
+        'http://192.168.31.65:5000/api/orders/' + btn.dataset.id + '/cancel',
+        {
+          method: 'PUT',
+          headers:{
+            Authorization:'Bearer ' + session.token
+          }
+        }
+      );
+
+      var data = await res.json();
+
+      if(!res.ok){
+        showToast(data.message || "Unable to cancel order.");
+        return;
+      }
+
+      showToast("Order cancelled.");
+
+      render();
+
+    }catch(err){
+
+      console.error(err);
+
+      showToast("Something went wrong.");
+
+    }
+
+  });
+
+});
+/* Remove from history */
+document.querySelectorAll('.history-remove-btn').forEach(function(btn){
+
+  btn.addEventListener('click', async function(){
+
+    var ok = await showConfirm(
+      "Remove this order from your history?"
+    );
+
+    if(!ok){
+      return;
+    }
+
+    var session = JSON.parse(
+      localStorage.getItem('hv_session') || '{}'
+    );
+
+    try{
+
+      var res = await fetch(
+        'http://192.168.31.65:5000/api/orders/' +
+        btn.dataset.id,
+        {
+          method:'DELETE',
+          headers:{
+            Authorization:'Bearer ' + session.token
+          }
+        }
+      );
+
+      var data = await res.json();
+
+      if(!res.ok){
+        showToast(data.message || "Unable to remove order.");
+        return;
+      }
+
+      showToast("Order removed from history.");
+
+      render();
+
+    }catch(err){
+
+      console.error(err);
+
+      showToast("Something went wrong.");
+
+    }
+
+  });
+
+});
+
+}
+
+
+     
+    /* ── Init ────────────────────────────────────────────────────── */
+    render();
+
+  }());
+  </script>
+
+  <div id="toast"></div>
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — HarVenStyles</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="../assets/icons/HarVen-logo.jpeg" />
+  <style>
+    /* ── Shop page — scoped ────────────────────────────────────── */
+    .shop-banner {
+      padding: 9rem 2rem 4rem;
+      text-align: center;
+      background: #0a0a0a;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .shop-banner__label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #888077;
+      margin-bottom: 1rem;
+    }
+    .shop-banner__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: #f5f2ec;
+    }
+    .shop-banner__sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: #888077;
+      margin-top: 1rem;
+    }
+
+    /* Filter bar */
+    .shop-filter {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem 2rem 0;
+      background: #0a0a0a;
+      flex-wrap: wrap;
+    }
+    .shop-filter__btn {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #888077;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: none;
+      padding: 0.55rem 1.4rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .shop-filter__btn:hover,
+    .shop-filter__btn.is-active { border-color: #f5f2ec; color: #f5f2ec; }
+
+    /* Grid section */
+    .shop-grid-section { background: #0a0a0a; padding: 3rem 2rem 6rem; }
+   .shop-product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 760px;
+  margin: 0 auto;
+  justify-content: center;
+}
+    .shop-product-grid .product-card__img-wrap {
+      overflow: hidden;
+      background: #111;
+      aspect-ratio: 3/4;
+    }
+    .shop-product-grid .product-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .shop-product-grid .product-card__img-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .shop-product-grid .product-card:hover .product-card__img-placeholder,
+    .shop-product-grid .product-card:hover .product-card__img-wrap img { transform: scale(1.03); }
+    .shop-product-grid .product-card__info { padding: 0.85rem 0 0; }
+    .shop-product-grid .product-card__name {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e8e0d0;
+    }
+    .shop-product-grid .product-card__price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: #888077;
+      margin-top: 0.2rem;
+    }
+    .shop-product-grid .product-card__tag {
+      display: inline-block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #0a0a0a;
+      background: #d4c9b4;
+      padding: 0.18rem 0.55rem;
+      margin-top: 0.45rem;
+      margin-bottom: 12px;
+display: inline-block;
+    }
+
+    /* ── Product card action buttons ─────────────────────────────
+       Only added here — nothing above is changed.
+    ──────────────────────────────────────────────────────────── */
+    .product-card__actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+    }
+    .product-card__btn {
+      flex: 1;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.6rem 0.5rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      line-height: 1;
+    }
+    /* Add to Cart — outlined */
+    .product-card__btn--cart {
+      background: transparent;
+      border-color: rgba(255,255,255,0.18);
+      color: #e8e0d0;
+    }
+    .product-card__btn--cart:hover {
+      border-color: #f5f2ec;
+      color: #f5f2ec;
+    }
+    /* Buy Now — filled */
+    .product-card__btn--buy {
+      background: #f5f2ec;
+      border-color: #f5f2ec;
+      color: #0a0a0a;
+    }
+    .product-card__btn--buy:hover {
+      background: #d4c9b4;
+      border-color: #d4c9b4;
+      color: #0a0a0a;
+    }
+
+    /* Size Chart */
+    .size-chart { background: #f5f2ec; color: #0a0a0a; padding: 6rem 2rem; }
+    .size-chart__inner { max-width: 860px; margin: 0 auto; text-align: center; }
+    .size-chart__label {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #888077;
+      margin-bottom: 1rem;
+    }
+    .size-chart__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+      color: #0a0a0a;
+      margin-bottom: 0.75rem;
+    }
+    .size-chart__note {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: #888077;
+      margin-bottom: 3rem;
+    }
+    .size-chart__table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .size-chart__table { width: 100%; border-collapse: collapse; font-family: 'Barlow', sans-serif; font-size: 0.82rem; }
+    .size-chart__table thead tr { background: #0a0a0a; color: #f5f2ec; }
+    .size-chart__table th {
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.2rem;
+      text-align: center;
+      font-size: 0.68rem;
+    }
+    .size-chart__table th:first-child { text-align: left; }
+    .size-chart__table td { padding: 0.85rem 1.2rem; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.08); color: #333; }
+    .size-chart__table td:first-child { text-align: left; font-weight: 500; letter-spacing: 0.12em; color: #0a0a0a; }
+    .size-chart__table tbody tr:hover { background: rgba(0,0,0,0.03); }
+    .size-chart__disclaimer { font-family: 'Barlow', sans-serif; font-size: 0.72rem; color: #888077; letter-spacing: 0.06em; margin-top: 1.75rem; }
+
+    @media (max-width: 768px) {
+      .shop-product-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .shop-product-grid { grid-template-columns: 1fr; max-width: 340px; margin: 0 auto; }
+      .product-card__actions { flex-direction: column; }
+    }
+    .product-card {
+  width: 100%;
+}
+
+.product-card__img-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #111;
+}
+
+.product-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.product-card__options{
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.product-card__select,
+.product-card__qty{
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  background:#fff;
+  font-size:14px;
+}
+
+.product-card__qty{
+  width:70px;
+}
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation" aria-hidden="true">
+    <div class="sidebar__header">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles Logo" class="sidebar__logo" />
+      <button class="sidebar__close" id="closeBtn" aria-label="Close menu">
+        <span class="close-line"></span>
+        <span class="close-line"></span>
+      </button>
+    </div>
+    <ul class="sidebar__nav" role="list">
+      <li class="sidebar__item" style="--i:0"><a href="index.html"   class="sidebar__link">Home</a></li>
+      <li class="sidebar__item" style="--i:1"><a href="shop.html"    class="sidebar__link">Shop</a></li>
+      <li class="sidebar__item" style="--i:2"><a href="product.html" class="sidebar__link">Product Details</a></li>
+      <li class="sidebar__item" style="--i:3"><a href="about.html"   class="sidebar__link">About</a></li>
+      <li class="sidebar__item" style="--i:4"><a href="contact.html" class="sidebar__link">Contact</a></li>
+       <!-- Cart & Order History — PART 2 -->
+      <li class="sidebar__item" style="--i:5"><a href="cart.html"    class="sidebar__link">Cart</a></li>
+      <li class="sidebar__item" style="--i:6"><a href="history.html" class="sidebar__link">Order History</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:5"><a href="faq.html"      class="sidebar__link">FAQ</a></li>
+      <li class="sidebar__item sidebar__item--minor" style="--i:6"><a href="shipping.html" class="sidebar__link">Shipping &amp; Returns</a></li>
+    </ul>
+    <div class="sidebar__footer">
+      <p class="sidebar__city">Chennai</p>
+      <p class="sidebar__tagline">Wear your confidence.</p>
+    </div>
+  </nav>
+
+  <!-- TOP BAR -->
+  <header class="topbar is-scrolled" id="topbar">
+    <div class="topbar__left">
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+      <a href="index.html" class="topbar__logo-link" aria-label="HarVenStyles home">
+        <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="topbar__logo" />
+      </a>
+    </div>
+  </header>
+
+  <!-- SHOP BANNER -->
+  <section class="shop-banner" aria-label="Shop header">
+    <span class="shop-banner__label">HarVenStyles Collection</span>
+    <h1 class="shop-banner__title">The Drop.</h1>
+    <p class="shop-banner__sub">Essentials built for the streets of Chennai.</p>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="shop-filter" role="group" aria-label="Filter products">
+    <button class="shop-filter__btn">Trending Tees</button>
+  </div>
+
+  <!-- PRODUCT GRID — 5 products -->
+  <section class="shop-grid-section" id="shop" aria-label="Products">
+  <div class="shop-product-grid" id="productGrid"></div>
+</section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <img src="../assets/icons/HarVen-logo.jpeg" alt="HarVenStyles" class="footer__logo" />
+      <p class="footer__tagline">Wear your confidence.</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer navigation">
+      <a href="faq.html"      class="footer__link">FAQ &amp; Terms</a>
+      <a href="shipping.html" class="footer__link">Shipping &amp; Returns</a>
+      <a href="about.html"    class="footer__link">About</a>
+      <a href="contact.html"  class="footer__link">Contact</a>
+      <a href="product.html"  class="footer__link">Product Details</a>
+    </nav>
+    <p class="footer__copy">&copy; <span id="year"></span> HarVenStyles. All rights reserved. Chennai, India.</p>
+  </footer>
+
+  <!-- Existing JS -->
+
+  <script src="js/modal.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cartUtils.js"></script>
+
+  <!-- Filter toggle — existing, untouched -->
+  <script>
+    document.querySelectorAll('.shop-filter__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.shop-filter__btn').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+      });
+    });
+  </script>
+
+
+  <script>
+  async function loadProducts() {
+    try {
+      const response = await fetch('http://192.168.31.65:5000/api/products');
+      const products = await response.json();
+      console.log("Products loaded:", products);
+
+      const productGrid = document.getElementById('productGrid');
+
+      productGrid.innerHTML = '';
+
+      console.log("Rendering products...");
+      products.forEach(product => {
+        productGrid.innerHTML += `
+          <article class="product-card">
+
+            <a href="product.html?id=${product._id}" aria-label="${product.name}">
+              <div class="product-card__img-wrap">
+                <img
+                  src="${product.image}"
+                  alt="${product.name}"
+                  class="product-card__img"
+                />
+              </div>
+            </a>
+
+            <div class="product-card__info">
+              <h2 class="product-card__name">${product.name}</h2>
+
+              <p class="product-card__price">
+                ₹${product.price}
+              </p>
+
+              <span class="product-card__tag">
+                ${product.category}
+              </span>
+              
+<div class="product-card__options">
+
+  <select class="product-card__select product-size">
+    <option value="S">Size: S</option>
+    <option value="L">Size: L</option>
+  </select>
+
+  <input
+    type="number"
+    class="product-card__qty"
+    min="1"
+    value="1"
+  />
+
+</div>
+
+              <div class="product-card__actions">
+
+                <button
+  class="product-card__btn product-card__btn--cart"
+  data-id="${product._id}"
+  data-name="${product.name}"
+  data-price="₹${product.price}"
+  data-img="${product.image}"
+>
+                  Add to Cart
+                </button>
+
+                <a
+  href="contact.html"
+  class="product-card__btn product-card__btn--buy"
+  data-id="${product._id}"
+>
+                  Buy Now
+                </a>
+
+              </div>
+            </div>
+
+          </article>
+        `;
+      });
+      console.log(productGrid.innerHTML);
+
+     document.querySelectorAll('.product-card__btn--buy').forEach(function(link){
+
+  link.addEventListener('click', async function(e){
+    showToast("BUY NOW CLICKED");
+
+    e.preventDefault();
+
+    var card = link.closest('.product-card');
+    console.log("CLICKED PRODUCT:", card.querySelector('[data-name]').getAttribute('data-name'));
+
+    var cartBtn = card.querySelector('[data-name]');
+    var sizeEl  = card.querySelector('.product-size');
+    var qtyEl   = card.querySelector('.product-card__qty');
+
+    try {
+
+      console.log("STEP 1");
+
+await HVCart.clearCart();
+
+console.log("STEP 2");
+console.log("Before addItem");
+
+await HVCart.addItem({
+  productId: cartBtn.getAttribute('data-id'),
+  name: cartBtn.getAttribute('data-name'),
+  image: cartBtn.getAttribute('data-img'),
+  price: cartBtn.getAttribute('data-price'),
+  size: sizeEl ? sizeEl.value : 'S',
+  quantity: qtyEl ? parseInt(qtyEl.value, 10) || 1 : 1
+});
+console.log("After addItem");
+
+var buyNowItem = {
+  name: cartBtn.getAttribute('data-name'),
+  price: cartBtn.getAttribute('data-price'),
+  img: cartBtn.getAttribute('data-img'),
+  size: sizeEl ? sizeEl.value : 'S',
+  qty: qtyEl ? parseInt(qtyEl.value, 10) || 1 : 1
+};
+
+localStorage.setItem(
+  'hv_buy_now',
+  JSON.stringify(buyNowItem)
+);
+
+console.log("NEW BUY NOW:", buyNowItem);
+
+
+console.log("STEP 3");
+
+      setTimeout(function() {
+  window.location.href = 'contact.html';
+}, 1500);
+
+    } catch(err) {
+
+      console.error(err);
+      showToast('Failed to prepare Buy Now order.');
+
+    }
+
+  });
+
+});
+document.querySelectorAll('.product-card__btn--cart').forEach(function(btn){
+
+  btn.addEventListener('touchstart', function () {
+  console.log("TOUCH DETECTED");
+  showToast("Touch detected");
+});
+
+  btn.addEventListener('click', async function(){
+
+    console.log("ADD TO CART CLICKED");
+
+    var card = btn.closest('.product-card');
+
+    var sizeEl = card.querySelector('.product-size');
+    var qtyEl  = card.querySelector('.product-card__qty');
+
+    try {
+
+      await HVCart.addItem({
+        productId: btn.getAttribute('data-id'),
+        name: btn.getAttribute('data-name'),
+        image: btn.getAttribute('data-img'),
+        price: btn.getAttribute('data-price'),
+        size: sizeEl ? sizeEl.value : 'S',
+        quantity: qtyEl ? parseInt(qtyEl.value, 10) || 1 : 1
+      });
+
+      showToast('Added to cart successfully!');
+
+    } catch(err) {
+
+      console.error(err);
+      showToast('Failed to add item to cart.');
+
+    }
+
+  });
+
+});
+
+
+    } catch (error) {
+      console.error('Error loading products:', error);
+    }
+  }
+
+  loadProducts();
+</script>
+
+<div id="toast"></div>
+
+</body>
+</html>
