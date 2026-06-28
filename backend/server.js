@@ -17,8 +17,8 @@ app.use(express.json());
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/cart", require("./routes/cartRoutes"));
-app.use("/api/orders", require("./routes/orderRoutes"));
+app.use("/api/cart", require("./routes/Cartroutes"));
+app.use("/api/orders", require("./routes/Orderroutes"));
 
 app.get("/", (req, res) => {
   res.send("HarVenStyles Backend Running");
