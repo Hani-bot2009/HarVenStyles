@@ -9,7 +9,7 @@ const {
   updateCartItem,
   clearCart,
   placeSingleOrder,
-} = require("../controllers/cartController");
+} = require("../controllers/Cartcontroller");
 
 
 const { protect } = require("../middleware/authMiddleware");
