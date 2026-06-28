@@ -843,7 +843,7 @@ if (clearBtn) {
     );
 
     fetch(
-      'http://192.168.31.65:5000/api/orders/clear/my-history',
+      'https://harvenstyles.onrender.com/api/orders/clear/my-history',
       {
         method:'DELETE',
         headers:{
@@ -896,7 +896,7 @@ if (!ok) {
     try{
 
       var res = await fetch(
-        'http://192.168.31.65:5000/api/orders/' + btn.dataset.id + '/cancel',
+        'https://harvenstyles.onrender.com/api/orders/' + btn.dataset.id + '/cancel',
         {
           method: 'PUT',
           headers:{
@@ -947,7 +947,7 @@ document.querySelectorAll('.history-remove-btn').forEach(function(btn){
     try{
 
       var res = await fetch(
-        'http://192.168.31.65:5000/api/orders/' +
+        'https://harvenstyles.onrender.com/api/orders/' +
         btn.dataset.id,
         {
           method:'DELETE',

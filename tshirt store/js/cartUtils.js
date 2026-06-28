@@ -11,7 +11,7 @@
 const HVCart = (function () {
   'use strict';
 
-  var API_BASE = 'http://192.168.31.65:5000/api';
+  var API_BASE = "https://harvenstyles.onrender.com/api";
   var SESSION_KEY = 'hv_session';
   var CART_KEY    = 'hv_cart';
 
