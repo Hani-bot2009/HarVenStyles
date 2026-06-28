@@ -15,9 +15,9 @@ const {
   cancelOrder,
   clearMyOrders,
   placeSingleItemOrder
-} = require("../controllers/orderController");
+} = require("../controllers/Ordercontroller");
 
-const { protect } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/Authmiddleware");
 
 router.route("/")
   .post(protect, placeOrder)    /* POST /api/orders       */

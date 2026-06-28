@@ -12,7 +12,7 @@ const {
 } = require("../controllers/Cartcontroller");
 
 
-const { protect } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/Authmiddleware");
 
 router.post("/", protect, addToCart);
 
